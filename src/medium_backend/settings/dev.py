@@ -14,3 +14,4 @@ DEBUG = True
 CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
 
 ALLOWED_HOSTS = ['3.7.42.121']
+
