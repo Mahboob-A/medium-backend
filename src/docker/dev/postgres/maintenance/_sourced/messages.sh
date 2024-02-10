@@ -41,8 +41,3 @@ message_suggestion(){
 message_success(){
     echo -e "\e[32mSUCCESS\e[0m: ${@}"
 }
-
-
-
-
-
