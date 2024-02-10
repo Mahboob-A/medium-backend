@@ -1,0 +1,63 @@
+version: "3.9"
+# 090224, Friday, 09.00 am 
+services: 
+  api: 
+    build: 
+      context: . # codes in the current dir of the yml file
+      dockerfile: ./docker/dev/django/Dockerfile
+    volumes: 
+      - .:/app:z # so that the host and the docker files are in sync and any changes are reflected into docker
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles 
+    ports: 
+      - "8000:8000"
+    env_file: 
+      - ./.envs/.dev/.django
+      - ./.envs/.dev/.postgres
+    depends_on: 
+      - postgres_db 
+      - mailhog_email_service 
+    command: /start  # start command 
+    networks: 
+      - medium-backend-api-network 
+
+  postgres_db: 
+    build: 
+      context: . 
+      dockerfile: ./docker/dev/postgres/Dockerfile
+    volumes: 
+      - dev_postgres_data:/var/lib/postgresql/data
+      - dev_postgres_data_backups:/backups
+    env_file: 
+      - ./.envs/.dev/.postgres 
+    networks: 
+      - medium-backend-api-network 
+
+
+  mailhog_email_service: 
+    image: mailhog/mailhog:v1.0.0
+    container_name: mailhog
+    ports: 
+      - "8025:8025"
+    networks: 
+      - medium-backend-api-network 
+  
+networks: 
+  medium-backend-api-network: 
+    driver: bridge
+  
+
+volumes: 
+  static_volume: 
+  media_volume: 
+  dev_postgres_data: {}
+  dev_postgres_data_backups: {}
+
+
+
+
+
+
+
+
+
