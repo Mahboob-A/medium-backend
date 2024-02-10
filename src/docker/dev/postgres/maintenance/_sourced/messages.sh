@@ -26,11 +26,6 @@ message_error(){
 }
 
 
-
-
-
-
-
 # prints text info in light gray color 
 message_info(){
     echo -e "\e[37mINFO\e[0m: ${@}"
