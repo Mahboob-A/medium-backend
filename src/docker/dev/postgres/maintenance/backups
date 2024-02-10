@@ -1,5 +1,7 @@
 !#/usr/bin/env bash 
 
+# the script to see postgres database backups 
+
 # get the currect file address
 work_dir="$(dirname ${0})"
 

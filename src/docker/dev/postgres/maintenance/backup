@@ -1,6 +1,8 @@
 !#/usr/bin/env bash 
 
 
+# the main backup scripts to backup postgres database 
+
 set -o errexit 
 set -o nounset
 set -o pipefail 
@@ -22,13 +24,6 @@ if [[ "${POSTGRES_USER}" == "postgres" ]]; then
 fi 
 
 
-: '
-export POSTGRES_HOST="${POSTGRES_HOST}"
-export POSTGRES_PORT="${POSTGRES_PORT}"
-export POSTGRES_USER="${POSTGRES_USER}"
-export POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
-export POSTGRES_DB="${POSTGRES_DB}"
-'
 
 # exporinting the postgres credentials 
 export PGHOST="${POSTGRES_HOST}"
@@ -41,6 +36,7 @@ export PGDATABASE="${POSTGRES_DB}"
 backup_filename="${BACKUP_FILE_PREFIX}_$(date + '%Y_%m_%dT%H_%M_%S').sql.gz"
 
 # pg_dump bash command and compress the backup with gzip 
+# TODO review if the command should be passed as: pg_dump "${POSTGRES_DB}" | gzip > "${BACKUP_DIR_PATH}/${backup_filename}"
 pg_dump | gzip > "${BACKUP_DIR_PATH}/${backup_filename}"
 
 
