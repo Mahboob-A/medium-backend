@@ -11,3 +11,5 @@ RUN chmod +x /usr/local/bin/maintenance/*
 # move the all files in the container's maintenance dir into the bin dir and delete the maintenance dir 
 RUN mv /usr/local/bin/maintenance/* /usr/local/bin \
     && rmdir /usr/local/bin/maintenance
+
+
