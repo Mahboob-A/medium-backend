@@ -1,6 +1,6 @@
-!#/usr/bin/env bash 
+#!/usr/bin/env bash 
 
 
-BACKUP_DIR_PATH ='/backups'
+BACKUP_DIR_PATH='/backups'
 
 BACKUP_FILE_PREFIX='backup'

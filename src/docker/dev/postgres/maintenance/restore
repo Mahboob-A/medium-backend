@@ -1,4 +1,4 @@
-!#/usr/bin/env bash 
+#!/usr/bin/env bash 
 
 
 # the main script to restore postgrest backed-up database 

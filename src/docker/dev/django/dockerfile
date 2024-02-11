@@ -81,21 +81,3 @@ COPY . ${APP_HOME}
 
 ENTRYPOINT ["/entrypoint"]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-!#/usr/bin/env bash 
+#!/usr/bin/env bash 
 
 # prints new line 
 message_newline(){

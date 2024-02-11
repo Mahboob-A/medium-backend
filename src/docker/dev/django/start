@@ -1,10 +1,10 @@
 #!/bin/bash 
 
-set -0 errexit 
+set -o errexit 
 
-set -0 fipefail 
+set -o pipefail 
 
-set -0 nounset 
+set -o nounset 
 
 python manage.py migrate --no-input 
 python manage.py collectstatic --no-input 

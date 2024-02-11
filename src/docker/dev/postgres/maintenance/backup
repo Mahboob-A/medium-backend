@@ -1,4 +1,4 @@
-!#/usr/bin/env bash 
+#!/usr/bin/env bash 
 
 
 # the main backup scripts to backup postgres database 
@@ -15,7 +15,7 @@ source "${work_dir}/_sourced/constants.sh"
 source "${work_dir}/_sourced/messages.sh"
 
 
-message_welcome "Backing up the '{POSTGRES_DB}' database ... "
+message_welcome "Backing up the '${POSTGRES_DB}' database ... "
 
 # default postgres user is not allowed to backup
 if [[ "${POSTGRES_USER}" == "postgres" ]]; then 
@@ -33,13 +33,13 @@ export PGPASSWORD="${POSTGRES_PASSWORD}"
 export PGDATABASE="${POSTGRES_DB}"
 
 
-backup_filename="${BACKUP_FILE_PREFIX}_$(date + '%Y_%m_%dT%H_%M_%S').sql.gz"
+backup_filename="${BACKUP_FILE_PREFIX}_$(date +'%Y_%m_%dT%H_%M_%S').sql.gz"
 
 # pg_dump bash command and compress the backup with gzip 
 # TODO review if the command should be passed as: pg_dump "${POSTGRES_DB}" | gzip > "${BACKUP_DIR_PATH}/${backup_filename}"
-pg_dump | gzip > "${BACKUP_DIR_PATH}/${backup_filename}"
+pg_dump "${POSTGRES_DB}" | gzip > "${BACKUP_DIR_PATH}/${backup_filename}"
 
 
-message_success "'${POSTGRES_DB}' database backup '${backup_filename}' has been created successfull and stored in '${BACKUP_DIR_PATH}'"
+message_success "'${POSTGRES_DB}' database backup '${backup_filename}' has been created successfully and stored in '${BACKUP_DIR_PATH}'"
 
 

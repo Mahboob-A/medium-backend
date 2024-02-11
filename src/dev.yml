@@ -15,13 +15,13 @@ services:
       - ./.envs/.dev/.django
       - ./.envs/.dev/.postgres
     depends_on: 
-      - postgres_db 
+      - postgres 
       - mailhog_email_service 
     command: /start  # start command 
     networks: 
       - medium-backend-api-network 
 
-  postgres_db: 
+  postgres: 
     build: 
       context: . 
       dockerfile: ./docker/dev/postgres/Dockerfile
