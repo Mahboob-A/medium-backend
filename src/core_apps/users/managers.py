@@ -33,7 +33,7 @@ class CustomUserManager(BaseUserManager):
     def _create_user(self, first_name, last_name, email, password,**extra_fields): 
         
         self._validate_fields(first_name=first_name, last_name=last_name, email=email, password=password)
-        
+        email = self.normalize_email(email)
         user = self.model(
             email=email, 
             defaults={'first_name':first_name, 'last_name':last_name, **extra_fields}
