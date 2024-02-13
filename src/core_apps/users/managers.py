@@ -13,7 +13,7 @@ class CustomUserManager(BaseUserManager):
         except ValidationError: 
             return ValidationError(_("Please provide a valid email address."))
 
-    def _validate_fields(self, first_name, last_name, email, username): 
+    def _validate_fields(self, first_name, last_name, email): 
         if not first_name: 
             raise ValidationError(_("Please provide first name."))
 
@@ -30,11 +30,10 @@ class CustomUserManager(BaseUserManager):
             self._email_validator(email)
 
 
-    def _create_user(self, first_name, last_name, email, password, username, **extra_fields): 
+    def _create_user(self, first_name, last_name, email, password,**extra_fields): 
         self._validate_fields(first_name, last_name, email)
         user = self.model(
             email=email, 
-            username=username, 
             defaults={'first_name':first_name, 'last_name':last_name, **extra_fields}
         )        
         
@@ -45,17 +44,17 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user 
 
-    def create_user(self, first_name, last_name, email, password, username=None, **extra_fields):
+    def create_user(self, first_name, last_name, email, password, **extra_fields):
 
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
 
         return self._create_user(
-            first_name=first_name, last_name=last_name, email=email, password=password, username, **extra_fields
+            first_name=first_name, last_name=last_name, email=email, password=password, **extra_fields
         )
         
 
-    def create_superuser(self, first_name, last_name, email, password, username=None, **extra_fields): 
+    def create_superuser(self, first_name, last_name, email, password, **extra_fields): 
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -67,7 +66,7 @@ class CustomUserManager(BaseUserManager):
             raise ValidationError(_('Superuser must have is_staff=Ture.'))
 
         return self._create_user(
-            first_name=first_name, last_name=last_name, email=email, password=password, username, **extra_fields
+            first_name=first_name, last_name=last_name, email=email, password=password, **extra_fields
         )
 
 
