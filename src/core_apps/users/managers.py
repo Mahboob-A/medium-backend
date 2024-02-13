@@ -7,13 +7,17 @@ from django.contrib.auth.hashers import make_password
 
 class CustomUserManager(BaseUserManager): 
 
-    def _email_validator(self, email): 
+    def _validate_email(self, email): 
         try: 
-            validate_email(email)
+            if not email: 
+                raise ValidationError(_("Please provide an email address."))
+            else: 
+                email = self.normalize_email(email)
+                validate_email(email)
         except ValidationError: 
             return ValidationError(_("Please provide a valid email address."))
 
-    def _validate_fields(self, first_name, last_name, email): 
+    def _validate_fields(self, first_name, last_name, email, password): 
         if not first_name: 
             raise ValidationError(_("Please provide first name."))
 
@@ -23,15 +27,13 @@ class CustomUserManager(BaseUserManager):
         if not password: 
             raise ValidationError(_("Please provide a valid password."))
 
-        if not email: 
-            raise ValidationError(_("Please provide an email address."))
-        else: 
-            email = self.normalize_email(email)
-            self._email_validator(email)
+        self._validate_email(email=email)
 
 
     def _create_user(self, first_name, last_name, email, password,**extra_fields): 
-        self._validate_fields(first_name, last_name, email)
+        
+        self._validate_fields(first_name=first_name, last_name=last_name, email=email, password=password)
+        
         user = self.model(
             email=email, 
             defaults={'first_name':first_name, 'last_name':last_name, **extra_fields}
