@@ -13,6 +13,9 @@ docker-logs:
 docker-logs-api: 
 	docker compose -f dev.yml logs api 
 
+docker-logs-postgres: 
+	docker compose -f dev.yml logs postgres
+
 makemigrations: 
 	docker compose -f dev.yml run --rm api python manage.py makemigrations
 

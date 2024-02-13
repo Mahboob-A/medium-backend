@@ -35,8 +35,7 @@ class CustomUserManager(BaseUserManager):
         self._validate_fields(first_name=first_name, last_name=last_name, email=email, password=password)
         email = self.normalize_email(email)
         user = self.model(
-            email=email, 
-            defaults={'first_name':first_name, 'last_name':last_name, **extra_fields}
+            first_name=first_name, last_name=last_name, email=email, **extra_fields
         )        
         
         hashed_password = make_password(password)

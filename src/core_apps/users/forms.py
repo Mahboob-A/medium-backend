@@ -27,3 +27,4 @@ class UserCreationForm(forms_handler.UserCreationForm):
 class UserChangeForm(forms_handler.UserChangeForm): 
     class Meta(forms_handler.UserChangeForm): 
         model = User 
+        fields = ['first_name', 'last_name',]

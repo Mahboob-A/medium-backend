@@ -32,8 +32,13 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 
 ############################ 
 
+# TODO remove the force script for normal application. this is being used as I am developing 
+# the project in AWS EC2 instance. 
+# Also remove the script in case of deployment. 
+# this is for development only to access the dev project on EC2 server. 
+#CHECK:  use this only when checking in local dev, not while creating docker containers. 
 
-
+FORCE_SCRIPT_NAME = "/proxy/8000"
 
 
 ############################ Application Definition
@@ -117,8 +122,8 @@ WSGI_APPLICATION = "medium_backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# TODO set to postgres database in docker container build 
 
-# TODO set to postgres database 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
