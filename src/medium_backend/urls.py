@@ -19,11 +19,11 @@ doc_schema_view = get_schema_view(
         license=openapi.License(name="MIT Licence"),
     ),
     public=True, 
-    permission_classes=(permissions.AllowAny,), 
+    permission_classes=(permissions.AllowAny,),
 ) 
 
 urlpatterns = [
-    path('redoc/', doc_schema_view.with_ui("redoc", cache_timeout=0)),
+    path('redoc/', doc_schema_view.with_ui("swagger", cache_timeout=0)),
     path(settings.ADMIN_URL, admin.site.urls),
 
 ]
