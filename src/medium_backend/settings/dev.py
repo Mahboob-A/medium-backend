@@ -15,3 +15,12 @@ CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
 
 ALLOWED_HOSTS = ['3.7.42.121']
 
+
+# EMAIL BACKEND # 
+EMAIL_BACKEND = "djcelery_email.backends.CeleryEmailBackend"
+EMAIL_HOST = env("EMAIL_HOST", default="mailhog")
+DOMAIN = env("EMAIL_DOMAIN")
+EMAIL_PORT = env("EMAIL_PORT")
+DEFAULT_FROM_EMAIL = "iammahboob.a@gmail.com"
+SITE_NAME = "Medium Backend"
+
