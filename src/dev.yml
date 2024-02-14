@@ -43,18 +43,18 @@ services:
       - medium-backend-api-network 
 
   nginx: 
+    build: 
+      context: . 
+      dockerfile: ./docker/dev/nginx/Dockerfile
     restart: always
     depends_on: 
       - api 
     volumes: 
       - static_volume:/app/staticfiles
       - media_volume:/app/mediafiles 
-    build: 
-      context: . 
-      dockerfile: ./docker/dev/nginx/Dockerfile
     ports: 
-      - "8080:81"
-    network: 
+      - "8081:80"
+    networks: 
       - medium-backend-api-network
   
 networks: 

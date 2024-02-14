@@ -38,7 +38,7 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 # this is for development only to access the dev project on EC2 server. 
 #CHECK:  use this only when checking in local dev, not while creating docker containers. 
 
-FORCE_SCRIPT_NAME = "/proxy/8000"
+FORCE_SCRIPT_NAME = "/proxy/8081"
 
 
 ############################ Application Definition
@@ -123,20 +123,20 @@ WSGI_APPLICATION = "medium_backend.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 # TODO set to postgres database in docker container build 
-
+'''
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ROOT_DIR / "db.sqlite3",  # mydatabase 
     }
 }
-
 '''
 # Database 
 DATABASES = {
     "default": env.db("DATABASE_URL")
 }
-'''
+
+
 # Password Hashers (argon2-cffi)
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",
