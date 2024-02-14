@@ -41,6 +41,47 @@ services:
       - "8025:8025"
     networks: 
       - medium-backend-api-network 
+    
+  redis: 
+    image: redis:7-alpine
+    networks: 
+      - medium-backend-api-network 
+
+  celery_worker: 
+    build:  
+      context: . 
+      dockerfile: ./docker/dev/django/Dockerfile
+    command: /start-cleryworker 
+    volumes: 
+      - .:/app
+    env_file: 
+      - ./.envs/.dev/django
+      - ./.envs/.dev/postgres
+    depends_on:   
+      - mailhog 
+      - postgres 
+      - redis 
+    networks: 
+      - medium-backend-api-network
+    
+  flower: 
+    build: 
+      context: . 
+      dockerfile: ./docker/dev/django/Dockerfile
+    command: /start-flower 
+    volumes: 
+      - flower_data:/data
+    env_file: 
+      - ./.envs/.dev/django
+      - ./.envs/.dev/postgres
+    depends_on:   
+      - postgres 
+      - redis 
+    ports: 
+      - "5555:5555"
+    networks: 
+      - medium-backend-api-network
+
 
   nginx: 
     build: 
@@ -67,6 +108,7 @@ volumes:
   media_volume: 
   dev_postgres_data: {}
   dev_postgres_data_backups: {}
+  flower_data: {}
 
 
 

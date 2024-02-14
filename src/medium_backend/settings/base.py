@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = [
     "phonenumber_field", 
     "drf_yasg", 
     "corsheaders", 
+    'djcelery_email',
 ]
 
 LOCAL_APPS = [
