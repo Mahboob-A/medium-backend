@@ -11,9 +11,9 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="zE6EsmoLRWzrlsrsh2E2kWZqYetOpOzGd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://127.0.0.1:8080"]
 
-ALLOWED_HOSTS = ['3.7.42.121']
+ALLOWED_HOSTS = ['3.7.42.121', '127.0.0.1' ]
 
 
 # EMAIL BACKEND # 

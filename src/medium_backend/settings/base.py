@@ -38,7 +38,6 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 # this is for development only to access the dev project on EC2 server. 
 #CHECK:  use this only when checking in local dev, not while creating docker containers. 
 
-FORCE_SCRIPT_NAME = "/proxy/8081"
 
 
 ############################ Application Definition

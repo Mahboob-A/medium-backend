@@ -22,7 +22,7 @@ class UserCreationForm(forms_handler.UserCreationForm):
         except User.DoesNotExist: 
             return email
         
-        raise forms.ValidationError(self.error_messages['email_exists'])
+        raise forms_handler.ValidationError(self.error_messages['email_exists'])
 
 class UserChangeForm(forms_handler.UserChangeForm): 
     class Meta(forms_handler.UserChangeForm): 
