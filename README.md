@@ -1,1 +1,2 @@
-# medium-backend
+# medium-backend 
+Django based backend
