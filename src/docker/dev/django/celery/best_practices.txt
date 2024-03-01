@@ -1,0 +1,3 @@
+usign watch files to monitor celery events are not recommended in prod environment i.e. while deploying our code. 
+this should only be used for dev purposes, and in prod, we should only deploy well tested code that does not change 
+frequently. 

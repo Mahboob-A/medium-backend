@@ -16,7 +16,8 @@ services:
       - ./.envs/.dev/.postgres
     depends_on: 
       - postgres 
-      - mailhog_email_service 
+      - mailhog
+      - redis
     command: /start  # start command 
     networks: 
       - medium-backend-api-network 
@@ -34,7 +35,7 @@ services:
       - medium-backend-api-network 
 
 
-  mailhog_email_service: 
+  mailhog: 
     image: mailhog/mailhog:v1.0.0
     container_name: mailhog
     ports: 
@@ -55,8 +56,8 @@ services:
     volumes: 
       - .:/app
     env_file: 
-      - ./.envs/.dev/django
-      - ./.envs/.dev/postgres
+      - ./.envs/.dev/.django
+      - ./.envs/.dev/.postgres
     depends_on:   
       - mailhog 
       - postgres 
@@ -72,8 +73,8 @@ services:
     volumes: 
       - flower_data:/data
     env_file: 
-      - ./.envs/.dev/django
-      - ./.envs/.dev/postgres
+      - ./.envs/.dev/.django
+      - ./.envs/.dev/.postgres
     depends_on:   
       - postgres 
       - redis 
