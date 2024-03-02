@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = [
     "drf_yasg", 
     "corsheaders", 
     'djcelery_email',
+    
 ]
 
 LOCAL_APPS = [
@@ -122,7 +123,7 @@ WSGI_APPLICATION = "medium_backend.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# TODO set to postgres database in docker container build 
+# TODO dev database set to postgres database in docker container build 
 '''
 DATABASES = {
     "default": {
@@ -131,7 +132,8 @@ DATABASES = {
     }
 }
 '''
-# Database 
+
+# TODO prod Database 
 DATABASES = {
     "default": env.db("DATABASE_URL")
 }

@@ -11,13 +11,14 @@ from core_apps.common.models import TimeStampModel
 User = get_user_model()
 
 class Profile(TimeStampModel): 
+        ''' Model to store individual user info data. Signal is used to create a profile instance. core_apps/profiles/signals '''
         class Gender(models.TextChoices): 
                 MALE = ('M', _('Male'))
                 FEMALE = ('F', _('Female'))
                 OTHER = ('O', _('Other'))
 
         user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-        profile_photo = models.ImageField(verbose_name=_('Profile Photo'), default='/default_profile_photo.png')
+        profile_photo = models.ImageField(verbose_name=_('Profile Photo'), default='/default-user-image.jpg')
         gender = models.CharField(
                 verbose_name = _('Gender'), 
                 choices=Gender.choices, 
@@ -30,8 +31,8 @@ class Profile(TimeStampModel):
 
         about_me = models.TextField(verbose_name=_('About Me'),  default='Say something about yourself')
         
-        country = CountryField(verbose_name=_('Country'), default='IN', null=True, blank=True)
-        city = models.CharField(verbose_name=_('City'), max_length=30, default='Kolkata', null=True, blank=True)
+        country = CountryField(verbose_name=_('Country'), default='IN', blank=True)
+        city = models.CharField(verbose_name=_('City'), max_length=30, default='Kolkata', blank=True)
         
         twitter_handle = models.CharField(verbose_name=_('Twitter/X Handle'), max_length=25, blank=True)
         followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
