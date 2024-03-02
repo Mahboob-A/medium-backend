@@ -60,6 +60,12 @@ THIRD_PARTY_APPS = [
     "drf_yasg", 
     "corsheaders", 
     'djcelery_email',
+    'allauth', 
+    'allauth.account', 
+    'allauth.socialaccount', 
+    'dj_rest_auth', 
+    'dj_rest_auth.registration', 
+    'rest_framework.authtoken', 
     
 ]
 
