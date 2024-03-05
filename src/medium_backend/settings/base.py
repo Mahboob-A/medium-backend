@@ -268,7 +268,7 @@ REST_AUTH = {
     "USE_JWT": True, 
     "JWT_AUTH_COOKIE": "medium-backend-access-token", 
     "JWT_AUTH_REFRESH_COOKIE": "medium-backend-refresh-token", 
-    "REGISTER_SERIALIZER": "core_apps.users.serializers.CustomRegistrationSerializer", 
+    "REGISTER_SERIALIZER": "core_apps.users.serializers.CustomRegisterSerializer", 
 }
 
 # Auth Backend 
