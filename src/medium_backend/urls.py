@@ -9,6 +9,9 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from dj_rest_auth.views import PasswordResetConfirmView
+from core_apps.users.views import CustomUserDetailsView
+
 # documentation 
 doc_schema_view = get_schema_view(
     openapi.Info(
@@ -22,9 +25,17 @@ doc_schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 ) 
 
+# urlpatterns 
+
 urlpatterns = [
     path('redoc/', doc_schema_view.with_ui("redoc", cache_timeout=0)),
     path(settings.ADMIN_URL, admin.site.urls),
+    
+    # Registration and Password reset urls | V1 
+    path('api/v1/auth/', include('dj_rest_auth')), 
+    path('api/v1/auth/registration/', include('dj_rest_auth.registration.urls')), 
+    path('api/v1/auth/password/reset/confirm/<uidb64>/<token>/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'), 
+    path('api/v1/auth/user/', CustomUserDetailsView.as_view(), name='user_details'),
 
 ]
 
