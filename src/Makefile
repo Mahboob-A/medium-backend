@@ -13,6 +13,18 @@ docker-logs:
 docker-logs-api: 
 	docker compose -f dev.yml logs api 
 
+docker-logs-celery:
+	docker compose -f dev.yml logs celery_worker
+
+docker-logs-redis:
+	docker compose -f dev.yml logs redis
+
+docker-logs-flower:
+	docker compose -f dev.yml logs flower
+
+docker-logs-mailhog:
+	docker compose -f dev.yml logs mailhog
+
 docker-logs-postgres: 
 	docker compose -f dev.yml logs postgres
 

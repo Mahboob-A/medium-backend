@@ -16,21 +16,25 @@ from dj_rest_auth.registration.serializers import RegisterSerializer
 from django_countries.serializer_fields import CountryField
 from phonenumber_field.serializerfields import PhoneNumberField
 
+from core_apps.profiles.models import Profile
+
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer): 
         ''' Serializer for User '''
+        
         gender = serializers.CharField(source="profile.gender")
         phone_number = PhoneNumberField(source="profile.phone_number")
         profile_photo = serializers.ReadOnlyField(source="profile.profile_photo.url")
         country = CountryField(source="profile.country")
         city = serializers.CharField(source="profile.city")
+        twitter_handle = serializers.CharField(source="profile.twitter_handle")
         
         class Meta: 
-                model = User 
-                fields = ['id', 'email', 'first_name', 'last_name', 'gender', 'phone_number', 'profile_photo']
+                model = User
+                fields = ['id', 'email', 'first_name', 'last_name', 'gender', 'phone_number', 'profile_photo', 'country', 'city', 'twitter_handle']
 
         def to_representation(self, instance):
                 representation =  super(UserSerializer, self).to_representation(instance)

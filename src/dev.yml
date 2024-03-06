@@ -52,7 +52,7 @@ services:
     build:  
       context: . 
       dockerfile: ./docker/dev/django/Dockerfile
-    command: /start-cleryworker 
+    command: /start-celeryworker
     volumes: 
       - .:/app
     env_file: 
