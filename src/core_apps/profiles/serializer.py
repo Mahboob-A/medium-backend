@@ -17,7 +17,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         class Meta: 
                 model = Profile
                 fields = [
-                        'id', 'first_name', 'last_name', 'email', 'profile_picture', 'country', 'city', 'phone_number', 'gender', 'about_me', 'twitter_handle'         
+                        'id', 'first_name', 'last_name', 'full_name', 'email', 'profile_picture', 'country', 'city', 'phone_number', 'gender', 'about_me', 'twitter_handle'         
                 ]
 
         def get_full_name(self, obj):
@@ -37,7 +37,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
                 fields = ['first_name', 'last_name', 'full_name', 'gender', 'twitter_handle', 'phone_number', 'profile_photo', 'country', 'city', 'about_me']
 
 
-class UserFollowingSerializer(serializers.ModelSerializer): 
+class UserFollowerAndFollowingSerializer(serializers.ModelSerializer): 
         ''' Follower of the currently logged in user '''
         first_name = serializers.CharField(source='user.first_name')
         last_name = serializers.CharField(source='user.last_name')

@@ -21,7 +21,7 @@ from .exception import CanNotFollowYouself
 from .pagination import ProfilePagination
 from .models import Profile
 from .renderers import ProfileJSONRenderer, ProfilesJSONRenderer
-from .serializer import ProfileUpdateSerializer, ProfileSerializer, UserFollowingSerializer
+from .serializer import ProfileUpdateSerializer, ProfileSerializer, UserFollowerAndFollowingSerializer
 
 
 User = get_user_model()
@@ -83,27 +83,41 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
                 
                 
 class UserFollowerAPIView(APIView): 
+        ''' API for all the followers of the currently logged in user '''
         permission_classes = [IsAuthenticated]
         
         def get(self, request, format=None): 
                 try: 
                         user_profile = Profile.objects.get(user__id=request.user.id)
                         all_follower_profiles = user_profile.followers.all()
-                        serializer = UserFollowingSerializer(all_follower_profiles, many=True)
+                        serializer = UserFollowerAndFollowingSerializer(all_follower_profiles, many=True)
                         
                         response_data = {
                                 'follower_count' : all_follower_profiles.count(), 
                                 'followers' : serializer.data
                         }
                         return Response(response_data, status=status.HTTP_200_OK)
+                # technically the control would not reach here as Profile object is created using Signals whenever an User object is created. 
                 except Profile.DoesNotExist: 
                         return Response({'detail': 'User has no followers'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
+class UserFollowingAPIView(APIView): 
+        ''' API for all the following profiles of the user_id '''
 
-
-
+        def get(self, request, user_id, format=None): 
+                try: 
+                        user_profile = Profile.objects.get(user__id=user_id)
+                        all_following_profiles = user_profile.following.all()
+                        serializer = UserFollowerAndFollowingSerializer(all_following_profiles, many=True)
+                        response_data = {
+                                'following_count' : all_following_profiles.count(), 
+                                'following' : serializer.data
+                        }
+                        return Response(response_data, status=status.HTTP_200_OK)
+                except Profile.DoesNotExist: 
+                        return Response({'detail' : 'User does not follow anyone'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

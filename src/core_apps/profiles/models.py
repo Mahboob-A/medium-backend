@@ -31,10 +31,10 @@ class Profile(TimeStampModel):
 
         about_me = models.TextField(verbose_name=_('About Me'),  default='Say something about yourself')
         
-        country = CountryField(verbose_name=_('Country'), default='IN', blank=True)
-        city = models.CharField(verbose_name=_('City'), max_length=30, default='Kolkata', blank=True)
+        country = CountryField(verbose_name=_('Country'), default='', blank=True)
+        city = models.CharField(verbose_name=_('City'), max_length=30, default='', blank=True)
         
-        twitter_handle = models.CharField(verbose_name=_('Twitter/X Handle'), max_length=25, blank=True)
+        twitter_handle = models.CharField(verbose_name=_('Twitter/X Handle'), max_length=25, blank=True, default='')
         followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
         
         def follow(self, profile): 
@@ -48,6 +48,6 @@ class Profile(TimeStampModel):
 
         
         def __str__(self): 
-                return f"{self.user.first_name}'s Profile"
+                return f"{self.user.get_full_name()}'s Profile"
         
         
