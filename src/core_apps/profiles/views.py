@@ -163,5 +163,29 @@ class FollowAUserAPIView(APIView):
                         return Response(response_data, status=status.HTTP_200_OK)
                 
                 except Profile.DoesNotExist: 
-                        raise NotFound('You can not follow a user that does not exist.')
+                        raise NotFound('You can not follow a user that does not exist!')
+
+
+class UnfollowAUserAPIView(APIView): 
+        ''' API for unfollwing a user_id by currently logged in user '''
+        def post(self, request, user_id, format=None): 
+                try: 
+                        user_profile = self.request.user.profile 
+                        to_be_unfollowed_profile = Profile.objects.get(user__id=user_id)
                         
+                        if not user_profile.is_following_a_user(to_be_unfollowed_profile): 
+                                response_data = {
+                                        'status_code' : status.HTTP_400_BAD_REQUEST, 
+                                        'message' : f'You can not unfollow as you are not following {to_be_unfollowed_profile.user.get_full_name()}'
+                                }       
+                                return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+                        
+                        user_profile.unfollow_user(to_be_unfollowed_profile)
+                        response_data = {
+                                'status_code' : status.HTTP_200_OK, 
+                                'message' : f'You have unfollowed {to_be_unfollowed_profile.user.get_full_name}!'
+                        }
+                        return Response(response_data, status=status.HTTP_200_OK)
+                
+                except Profile.DoesNotExist: 
+                        raise NotFound('You can not unfollow a user that does not exist!')
