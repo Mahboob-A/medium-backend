@@ -88,18 +88,20 @@ class UserFollowerAPIView(APIView):
         
         def get(self, request, format=None): 
                 try: 
-                        user_profile = Profile.objects.get(user__id=request.user.id)
+                        # user_profile = Profile.objects.get(user__id=request.user.id)
+                        user_profile = self.request.user.profile 
                         all_follower_profiles = user_profile.followers.all()
                         serializer = UserFollowerAndFollowingSerializer(all_follower_profiles, many=True)
                         
                         response_data = {
+                                'status_code' : status.HTTP_200_OK, 
                                 'follower_count' : all_follower_profiles.count(), 
                                 'followers' : serializer.data
                         }
                         return Response(response_data, status=status.HTTP_200_OK)
                 # technically the control would not reach here as Profile object is created using Signals whenever an User object is created. 
                 except Profile.DoesNotExist: 
-                        return Response({'detail': 'User has no followers'}, status=status.HTTP_404_NOT_FOUND)
+                        return Response({'message': 'User has no followers'}, status=status.HTTP_404_NOT_FOUND)
 
 
 
@@ -112,35 +114,54 @@ class UserFollowingAPIView(APIView):
                         all_following_profiles = user_profile.following.all()
                         serializer = UserFollowerAndFollowingSerializer(all_following_profiles, many=True)
                         response_data = {
+                                'status_code' : status.HTTP_200_OK, 
                                 'following_count' : all_following_profiles.count(), 
                                 'following' : serializer.data
                         }
                         return Response(response_data, status=status.HTTP_200_OK)
                 except Profile.DoesNotExist: 
-                        return Response({'detail' : 'User does not follow anyone'}, status=status.HTTP_404_NOT_FOUND)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        return Response({'message' : 'User does not follow anyone'}, status=status.HTTP_404_NOT_FOUND)
+                
+                
+                
+                
+class FollowAUserAPIView(APIView): 
+        ''' API for currently logged in user is follwing another user_id '''
+        def post(self, requet, user_id, format=None): 
+                try: 
+                        # user_profile = Profile.objects.get(user=self.request.user)
+                        user_profile = self.request.user.profile 
+                        
+                        # user_id is  the user who is being followed by the currently logged in user. 
+                        to_be_followed_profile = Profile.objects.get(user__id=user_id)
+                        
+                        if user_profile == to_be_followed_profile: 
+                                raise CanNotFollowYouself()
+                        
+                        if user_profile.is_following_a_user(to_be_followed_profile): 
+                                response_data = {
+                                        'status_code' : status.HTTP_400_BAD_REQUEST, 
+                                        'message' : f'You are already following {to_be_followed_profile.user.get_full_name()}'
+                                }                
+                                return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
+                        
+                        # currently logged in user is following the user_id 
+                        user_profile.follow_user(to_be_followed_profile)
+                        
+                        subject = 'A New Follower for You!'
+                        message = f'Hello {to_be_followed_profile.user.get_full_name()}! \n
+                        {user_profile.user.get_full_name()} is now following you! 
+                        '
+                        from_email = DEFAULT_FROM_EMAIL
+                        recipient_list = [to_be_followed_profile.user.email]
+                        send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
+                        
+                        response_data = {
+                                'status_code' : status.HTTP_200_OK, 
+                                'message' : f'You are now following {to_be_followed_profile.user.get_full_name()}'
+                        }
+                        return Response(response_data, status=status.HTTP_200_OK)
+                
+                except Profile.DoesNotExist: 
+                        raise NotFound('You can not follow a user that does not exist.')
+                        

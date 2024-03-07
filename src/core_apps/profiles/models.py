@@ -37,13 +37,13 @@ class Profile(TimeStampModel):
         twitter_handle = models.CharField(verbose_name=_('Twitter/X Handle'), max_length=25, blank=True, default='')
         followers = models.ManyToManyField('self', symmetrical=False, related_name='following', blank=True)
         
-        def follow(self, profile): 
+        def follow_user(self, profile): 
                 self.followers.add(profile)
         
-        def unfollow(self, profile): 
+        def unfollow_user(self, profile): 
                 self.followers.remove(profile)
         
-        def is_following(self, profile): 
+        def is_following_a_user(self, profile): 
                 return self.followers.filter(pkid=profile.pkid).exists()
 
         
