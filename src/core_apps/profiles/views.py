@@ -21,12 +21,13 @@ from .exception import CanNotFollowYouself
 from .pagination import ProfilePagination
 from .models import Profile
 from .renderers import ProfileJSONRenderer, ProfilesJSONRenderer
-from .serializer import ProfileUpdateSerializer, ProfileSerializer, FollowingSerializer
+from .serializer import ProfileUpdateSerializer, ProfileSerializer, UserFollowingSerializer
 
 
 User = get_user_model()
 
 class ProfileListAPIView(generics.ListAPIView): 
+        ''' API for listing all the user profiles  '''
         queryset = Profile.objects.all()
         pagination_class = ProfilePagination
         serializer_class = ProfileSerializer
@@ -34,6 +35,7 @@ class ProfileListAPIView(generics.ListAPIView):
         
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
+        ''' API for user profile details '''
         permission_classes = [IsAuthenticated]
         serializer_class = ProfileSerializer
         renderer_classes = [ProfileJSONRenderer]
@@ -54,11 +56,48 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 
 
 class ProfileUpdateAPIView(generics.UpdateAPIView): 
+        ''' API for updating user profile '''
         serializer_class = ProfileUpdateSerializer
+        permission_classes = [IsAuthenticated]
+        parser_classes = [MultiPartParser]
+        renderer_classes = [ProfileJSONRenderer]
         
-
-
-
+        
+        def get_object(self):
+                return self.request.user.profile 
+        
+        def put(self, request, *args, **kwargs):
+                instance = self.get_object()
+                serializer = self.get_serializer(instance, data=request.data, partial=False)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+                
+        
+        def patch(self, request, *args, **kwargs):
+                instance = self.get_object()
+                serializer = self.get_serializer(instance, data=request.data, partial=True)
+                serializer.is_vaild(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+                
+                
+class UserFollowerAPIView(APIView): 
+        permission_classes = [IsAuthenticated]
+        
+        def get(self, request, format=None): 
+                try: 
+                        user_profile = Profile.objects.get(user__id=request.user.id)
+                        all_follower_profiles = user_profile.followers.all()
+                        serializer = UserFollowingSerializer(all_follower_profiles, many=True)
+                        
+                        response_data = {
+                                'follower_count' : all_follower_profiles.count(), 
+                                'followers' : serializer.data
+                        }
+                        return Response(response_data, status=status.HTTP_200_OK)
+                except Profile.DoesNotExist: 
+                        return Response({'detail': 'User has no followers'}, status=status.HTTP_404_NOT_FOUND)
 
 
 

@@ -37,7 +37,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
                 fields = ['first_name', 'last_name', 'full_name', 'gender', 'twitter_handle', 'phone_number', 'profile_photo', 'country', 'city', 'about_me']
 
 
-class FollowingSerializer(serializers.ModelSerializer): 
+class UserFollowingSerializer(serializers.ModelSerializer): 
         ''' Follower of the currently logged in user '''
         first_name = serializers.CharField(source='user.first_name')
         last_name = serializers.CharField(source='user.last_name')
