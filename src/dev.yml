@@ -2,6 +2,7 @@ version: "3.9"
 # 090224, Friday, 09.00 am 
 services: 
   api: 
+    restart: always 
     build: 
       context: . # codes in the current dir of the yml file
       dockerfile: ./docker/dev/django/Dockerfile

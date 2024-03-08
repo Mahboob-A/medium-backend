@@ -18,7 +18,7 @@ class Profile(TimeStampModel):
                 OTHER = ('O', _('Other'))
 
         user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-        profile_photo = models.ImageField(verbose_name=_('Profile Photo'), default='/default-user-image.jpg')
+        profile_photo = models.ImageField(verbose_name=_('Profile Photo'), upload_to='CustomUsers/ProfilePictures/', default='CustomUsers/default-user-image.jpg')
         gender = models.CharField(
                 verbose_name = _('Gender'), 
                 choices=Gender.choices, 

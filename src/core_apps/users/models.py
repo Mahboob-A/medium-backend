@@ -15,7 +15,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(verbose_name=_("First Name"), max_length=50)
     last_name = models.CharField(verbose_name=_("Last Name"), max_length=50)
     email = models.EmailField(verbose_name=_("Email Address"), max_length=50, db_index=True, unique=True)
-    profile_picture = models.ImageField(verbose_name=_("Profile Picture"), upload_to='CustomUsers/ProfilePictures/', default='/default-user-image.jpg', null=True, blank=True)
+    user_image = models.ImageField(verbose_name=_("User Image Profile Picture"), upload_to='CustomUsers/UserImage/', default='CustomUsers/default-user-image.jpg', null=True, blank=True)
     phone_number = models.CharField(verbose_name=_("Phone Number"), max_length=16, validators=[phone_regex], unique=True, null=True, blank=True)
 
     is_active = models.BooleanField(verbose_name=_("Is Active"), default=True)

@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 
 # drf 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -32,6 +32,7 @@ class ProfileListAPIView(generics.ListAPIView):
         pagination_class = ProfilePagination
         serializer_class = ProfileSerializer
         renderer_classes = [ProfilesJSONRenderer]
+
         
 
 class ProfileDetailAPIView(generics.RetrieveAPIView):
@@ -77,7 +78,7 @@ class ProfileUpdateAPIView(generics.UpdateAPIView):
         def patch(self, request, *args, **kwargs):
                 instance = self.get_object()
                 serializer = self.get_serializer(instance, data=request.data, partial=True)
-                serializer.is_vaild(raise_exception=True)
+                serializer.is_valid(raise_exception=True)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
                 
@@ -106,11 +107,11 @@ class UserFollowerAPIView(APIView):
 
 
 class UserFollowingAPIView(APIView): 
-        ''' API for all the following profiles of the user_id '''
+        ''' API for all the profiles the currently logged in user is following '''
 
-        def get(self, request, user_id, format=None): 
+        def get(self, request, format=None): 
                 try: 
-                        user_profile = Profile.objects.get(user__id=user_id)
+                        user_profile = self.request.user.profile 
                         all_following_profiles = user_profile.following.all()
                         serializer = UserFollowerAndFollowingSerializer(all_following_profiles, many=True)
                         response_data = {
@@ -126,7 +127,7 @@ class UserFollowingAPIView(APIView):
                 
                 
 class FollowAUserAPIView(APIView): 
-        ''' API for currently logged in user is follwing another user_id '''
+        ''' API for currently logged in user to follow another user_id (uuid)'''
         def post(self, requet, user_id, format=None): 
                 try: 
                         # user_profile = Profile.objects.get(user=self.request.user)
@@ -141,7 +142,7 @@ class FollowAUserAPIView(APIView):
                         if user_profile.is_following_a_user(to_be_followed_profile): 
                                 response_data = {
                                         'status_code' : status.HTTP_400_BAD_REQUEST, 
-                                        'message' : f'You are already following {to_be_followed_profile.user.get_full_name()}'
+                                        'message' : f'You are already following {to_be_followed_profile.user.first_name.title()} {to_be_followed_profile.user.last_name.title()}'
                                 }                
                                 return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
                         
@@ -149,16 +150,17 @@ class FollowAUserAPIView(APIView):
                         user_profile.follow_user(to_be_followed_profile)
                         
                         subject = 'A New Follower for You!'
-                        message = f'Hello {to_be_followed_profile.user.get_full_name()}! \n
-                        {user_profile.user.get_full_name()} is now following you! 
-                        '
+                        
+                        message = f'''Hello {to_be_followed_profile.user.first_name.title()} {to_be_followed_profile.user.last_name.title()}! \n
+                        {user_profile.user.first_name.title()} {user_profile.user.last_name.title()} is now following you! '''
+                        
                         from_email = DEFAULT_FROM_EMAIL
                         recipient_list = [to_be_followed_profile.user.email]
                         send_mail(subject=subject, message=message, from_email=from_email, recipient_list=recipient_list, fail_silently=True)
                         
                         response_data = {
                                 'status_code' : status.HTTP_200_OK, 
-                                'message' : f'You are now following {to_be_followed_profile.user.get_full_name()}'
+                                'message' : f'You are now following {to_be_followed_profile.user.first_name.title()} {to_be_followed_profile.user.last_name.title()}!'
                         }
                         return Response(response_data, status=status.HTTP_200_OK)
                 
@@ -176,14 +178,14 @@ class UnfollowAUserAPIView(APIView):
                         if not user_profile.is_following_a_user(to_be_unfollowed_profile): 
                                 response_data = {
                                         'status_code' : status.HTTP_400_BAD_REQUEST, 
-                                        'message' : f'You can not unfollow as you are not following {to_be_unfollowed_profile.user.get_full_name()}'
+                                        'message' : f'You can not unfollow as you are not following {to_be_unfollowed_profile.user.first_name.title()} {to_be_unfollowed_profile.user.last_name.title()}'
                                 }       
                                 return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
                         
                         user_profile.unfollow_user(to_be_unfollowed_profile)
                         response_data = {
                                 'status_code' : status.HTTP_200_OK, 
-                                'message' : f'You have unfollowed {to_be_unfollowed_profile.user.get_full_name}!'
+                                'message' : f'You have unfollowed {to_be_unfollowed_profile.user.first_name.title()} {to_be_unfollowed_profile.user.last_name.title()}!'
                         }
                         return Response(response_data, status=status.HTTP_200_OK)
                 
