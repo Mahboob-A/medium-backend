@@ -21,19 +21,20 @@ class ArticleReadTimeEngine:
         
                 total_word_count = title_word_count + body_word_count + description_word_count 
                 
+                # reading time in minutes 
                 reading_time = total_word_count / words_per_minute 
                 
                 total_seconds = 0 
-                if text.has_banner_image: 
+                if text.banner_image: 
                         total_seconds += seconds_per_image 
                 
-                if text.has_body_image_1: 
+                if text.body_image_1: 
                         total_seconds += seconds_per_image 
                         
-                if text.has_body_image_2: 
+                if text.body_image_2: 
                         total_seconds += seconds_per_image 
                 
-                if text.has_body_image_3: 
+                if text.body_image_3: 
                         total_seconds += seconds_per_image 
                         
                 total_tags = text.tags.count()
@@ -41,7 +42,7 @@ class ArticleReadTimeEngine:
                 if total_tags > 0: 
                         total_seconds += total_tags * seconds_per_tag
                 
-                # convert total reading time in minutes 
+                # add total seconds in total time and convert in minutes 
                 reading_time = reading_time + total_seconds / 60 
                         
                 # take the ceil part 
