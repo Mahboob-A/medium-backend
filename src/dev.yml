@@ -50,6 +50,7 @@ services:
       - medium-backend-api-network 
 
   celery_worker: 
+    restart: always
     build:  
       context: . 
       dockerfile: ./docker/dev/django/Dockerfile
