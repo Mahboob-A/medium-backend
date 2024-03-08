@@ -31,10 +31,10 @@ class ArticleReadTimeEngine:
                         total_seconds += seconds_per_image 
                         
                 if text.has_body_image_2: 
-                        total_seconds + seconds_per_image 
+                        total_seconds += seconds_per_image 
                 
                 if text.has_body_image_3: 
-                        total_seconds + seconds_per_image 
+                        total_seconds += seconds_per_image 
                         
                 total_tags = text.tags.count()
                 
