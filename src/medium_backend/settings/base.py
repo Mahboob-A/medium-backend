@@ -74,6 +74,8 @@ LOCAL_APPS = [
     "core_apps.profiles", 
     "core_apps.common", 
     "core_apps.users", 
+    'core_apps.articles', 
+    'core_apps.ratings', 
 ]
 
 # installed apps 
