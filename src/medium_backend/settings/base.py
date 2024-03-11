@@ -67,6 +67,7 @@ THIRD_PARTY_APPS = [
     'dj_rest_auth', 
     'dj_rest_auth.registration', 
     'rest_framework.authtoken', 
+    'taggit', 
     
 ]
 

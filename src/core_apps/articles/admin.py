@@ -15,13 +15,13 @@ class ArticleAdmin(admin.ModelAdmin):
         readonly_fields = ['view_count']
         date_hierarchy = 'created_at'
         fieldsets = [
-                {'legend' : 'Article Information', 'fields' : ['title', 'slug', 'author']}, 
-                {'legend' : 'Content', 'fields' : ['description', 'body', 'tags']}, 
-                {'legend' : 'Analytics', 'fields' : ['view_count']}
+                ('Article Information', {'fields': ['title', 'author']}),
+                ('Content', {'fields': ['description', 'body', 'tags']}),
+                ('Analytics', {'fields': ['view_count']}),
         ]
         
         def get_view_count(self, obj): 
-                return self.obj.view_count()
+                return obj.view_count()
         
 @admin.register(ArticleViews)
 class ArticleAdmin(admin.ModelAdmin): 

@@ -1,9 +1,9 @@
 
-from django_filters import filters
+from django_filters import filters, FilterSet
 
 from .models import Article
 
-class ArticleFilter(filters.FilterSet): 
+class ArticleFilter(FilterSet): 
         ''' Filter for core_apps.article.Article model '''
         author = filters.CharFilter(field_name='author__first_name', lookup_expr='icontains')
         title = filters.CharFilter(field_name='title', lookup_expr='icontains')

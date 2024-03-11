@@ -9,12 +9,13 @@ from rest_framework import filters, generics, permissions, status
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .filters import ArticleFilter
+
+from .models import Article, ArticleReadTimeEngine, ArticleViews
+from .serializers import ArticleSerializer
 from .pagination import ArticlePageNumberPagination
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
 from .permissions import IsOwnerOrReadOnly
-from .models import Article, ArticleReadTimeEngine, ArticleViews
-from .serializers import ArticleSerializer
+from .filters import ArticleFilter
 
 
 User = get_user_model()
@@ -25,7 +26,8 @@ class ArticleListCreateView(generics.ListCreateAPIView):
         ''' Article API fot Listing and Creating Articles '''
         queryset = Article.objects.all()
         serializer_class = ArticleSerializer
-        filterset_class = ArticleFilter
+        # TODO as ArticleFilters is having some issue, fix it later once the project is ready to run 
+        filterset_class = ArticleFilter 
         pagination_class = ArticlePageNumberPagination
         
         permission_classes = [permissions.IsAuthenticated]
@@ -33,12 +35,11 @@ class ArticleListCreateView(generics.ListCreateAPIView):
         ordering_fields = ['-crearted_at', '-updated_at']
         filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
 
-        # TODO after checking the api whther as response is being returned for the api, stay or delete the comment: => methods with "perform_" does not return any response from the parent class. 
         def perform_create(self, serializer):
                 serializer.save(author=self.request.user)
                 
                 logger.info(
-                        f'Article {serializer.data.get('title')} created by {self.request.user.first_name.title()} {self.request.user.last_name.title()}'
+                        f'Article {serializer.data.get("title")} created by {self.request.user.first_name.title()} {self.request.user.last_name.title()}'
                 )
                 
                 
@@ -47,7 +48,7 @@ class ArticleListCreateView(generics.ListCreateAPIView):
                 
 class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView): 
         queryset = Article.objects.all()
-        serializer_class = ArticlePageNumberPagination
+        serializer_class = ArticleSerializer
         permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]        
         renderer_classes = [ArticlesJSONRenderer]
         lookup_field = 'id'  # to retrive object similart to passing the id to method's param in function based view 

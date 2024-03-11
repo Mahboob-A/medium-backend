@@ -13,6 +13,9 @@ docker-logs:
 docker-logs-api: 
 	docker compose -f dev.yml logs api 
 
+docker-restart-api: 
+	docker compose -f dev.yml restart api 
+
 docker-logs-celery:
 	docker compose -f dev.yml logs celery_worker
 

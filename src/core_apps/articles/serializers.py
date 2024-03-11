@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from articles.models import Article, ArticleViews
-from profiles.serializer import ProfileSerializer
+from .models import Article, ArticleViews
+from core_apps.profiles.serializer import ProfileSerializer
 
 
 class TagListField(serializers.Field): 
-        ''' To get all the tags in a list '''
+        ''' To get all the tags in a list/in list form '''
         def to_representation(self, value):
                 return [tag.name for tag in value.all()]
 
@@ -25,7 +25,7 @@ class TagListField(serializers.Field):
 
 class ArticleSerializer(serializers.ModelSerializer): 
         ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
-        author_details = ProfileSerializer(source='author.profile', read_only=True)
+        author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
         estimated_reading_time = serializers.ReadOnlyField()
         
         banner_image = serializers.SerializerMethodField()
@@ -63,6 +63,7 @@ class ArticleSerializer(serializers.ModelSerializer):
                 instance.author = validated_data.get('author', instance.author)
                 instance.title = validated_data.get('title', instance.title)
                 instance.slug = validated_data.get('slug', instance.slug)
+                instance.body = validated_data.get('body', instance.body)
                 instance.description = validated_data.get('description', instance.description)
                 instance.banner_image = validated_data.get('banner_image', instance.banner_image)
                 instance.body_image_1 = validated_data.get('body_image_1', instance.body_image_1)
@@ -78,8 +79,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         class Meta: 
                 model = Article
-                fields = ['id', 'author_info', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                        'estimated_reading_time', 'banner_image', 'views', 'created_at', 'updated_at', 
+                fields = ['id', 'author_details', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
+                          'tags', 'estimated_reading_time', 'banner_image', 'views', 'created_at', 'updated_at', 
                 ]
         
         

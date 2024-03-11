@@ -8,6 +8,7 @@ from taggit.managers import TaggableManager
 
 from core_apps.common.models import TimeStampModel
 from .article_read_time_engine import ArticleReadTimeEngine
+from django.conf import settings
 
 User = get_user_model()
 
@@ -15,7 +16,7 @@ User = get_user_model()
 class Article(TimeStampModel): 
         ''' Model for individual Article object '''
         author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
-        title = models.CharFiel(verbose_name=_('Article Title'), max_length=255)
+        title = models.CharField(verbose_name=_('Article Title'), max_length=255)
         slug = AutoSlugField(populate_from='title', always_update=True, unique=True)
         description = models.CharField(verbose_name=_('Article Description'), max_length=255, blank=True)
         body = models.TextField(verbose_name=_('Article Body'))
