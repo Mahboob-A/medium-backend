@@ -13,6 +13,7 @@ User = get_user_model()
 
 
 class Article(TimeStampModel): 
+        ''' Model for individual Article object '''
         author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
         title = models.CharFiel(verbose_name=_('Article Title'), max_length=255)
         slug = AutoSlugField(populate_from='title', always_update=True, unique=True)
@@ -22,8 +23,7 @@ class Article(TimeStampModel):
         banner_image = models.ImageField(verbose_name=_('Banner Image'), default='/article-default.png')
         body_image_1 = models.ImageField(verbose_name=_('Body Image 1'), default='/article-default.png')
         body_image_2 = models.ImageField(verbose_name=_('Body Image 2'), default='/article-default.png')
-        body_image_3 = models.ImageField(verbose_name=_('Body Image 3'), default='/article-default.png')
-        body_image_4 = models.ImageField(verbose_name=_('Body Image 4'), default='/article-default.png')
+
         
         tags = TaggableManager()
         
@@ -35,15 +35,18 @@ class Article(TimeStampModel):
                 return f"{self.author.first_name} {self.author.last_name}'s Article - {self.title}"
         
         
+        # calls ArticleReadTimeEngine 
         @property
         def estimated_reading_time(self): 
                 return ArticleReadTimeEngine.estimate_reading_time(self)
         
+        # article_veiws is the reverse relation with ArticleViews model with Article model. 
         def view_count(self): 
                 return self.article_views.count()
 
 
 class ArticleViews(TimeStampModel): 
+        ''' Model for storing each Article Being Viewed By Which User and with What IP Address'''
         article = models.ForeignKey(Article, verbose_name=_("Article being viewed"), on_delete=models.CASCADE, related_name='article_views')
         user = models.ForeignKey(User, verbose_name=_("Article viewd by User"), on_delete=models.CASCADE, related_name='user_viewed_article')
         viewer_ip = models.GenericIPAddressField(verbose_name=_("Viewer IP"), null=True, blank=True)
