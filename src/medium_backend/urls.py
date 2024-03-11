@@ -41,6 +41,9 @@ urlpatterns = [
 
     # profile app 
     path('api/v1/profiles/', include('core_apps.profiles.urls')), 
+    
+    # articles app 
+    path('api/v1/articles/', include('core_apps.articles.urls')), 
 ]
 
 

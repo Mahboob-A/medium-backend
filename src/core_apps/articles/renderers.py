@@ -3,7 +3,7 @@ import json
 from rest_framework.renderers import JSONRenderer
 
 
-class ArticleRenderer(JSONRenderer): 
+class ArticleJSONRenderer(JSONRenderer): 
         charset = 'utf-8'
         
         def render(self, data, accepted_media_type=None, renderer_context=None):
@@ -16,12 +16,12 @@ class ArticleRenderer(JSONRenderer):
                 
                 # if there are errors, then render as per default JSON style. 
                 if errors is not None: 
-                        return super(ArticleRenderer, self).render(data)
+                        return super(ArticleJSONRenderer, self).render(data)
                 # else, render in the below way in JSON 
                 return json.dumps({'status_code' : status_code, 'article' : data})
 
 # for articles => *s 
-class ArticlesRenderer(JSONRenderer): 
+class ArticlesJSONRenderer(JSONRenderer): 
         charset = 'utf-8'
         
         def render(self, data, accepted_media_type=None, renderer_context=None):
@@ -34,7 +34,7 @@ class ArticlesRenderer(JSONRenderer):
                 
                 # if there are errors, then render as per default JSON style. 
                 if errors is not None: 
-                        return super(ArticlesRenderer, self).render(data)
+                        return super(ArticlesJSONRenderer, self).render(data)
                 # else, render in the below way in JSON 
                 return json.dumps({'status_code' : status_code, 'articles' : data})
 
