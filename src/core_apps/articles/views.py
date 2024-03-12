@@ -26,7 +26,6 @@ class ArticleListCreateView(generics.ListCreateAPIView):
         ''' Article API fot Listing and Creating Articles '''
         queryset = Article.objects.all()
         serializer_class = ArticleSerializer
-        # TODO as ArticleFilters is having some issue, fix it later once the project is ready to run 
         filterset_class = ArticleFilter 
         pagination_class = ArticlePageNumberPagination
         

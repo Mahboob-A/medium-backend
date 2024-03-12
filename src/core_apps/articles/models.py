@@ -8,7 +8,6 @@ from taggit.managers import TaggableManager
 
 from core_apps.common.models import TimeStampModel
 from .article_read_time_engine import ArticleReadTimeEngine
-from django.conf import settings
 
 User = get_user_model()
 
