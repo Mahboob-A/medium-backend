@@ -51,7 +51,7 @@ class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         queryset = Article.objects.all()
         serializer_class = ArticleSerializer
         permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]        
-        renderer_classes = [ArticlesJSONRenderer]
+        renderer_classes = [ArticleJSONRenderer]
         lookup_field = 'id'  # to retrive object similart to passing the id to method's param in function based view 
         parser_classes = [MultiPartParser, FormParser]  # to handle file/image upload 
         
