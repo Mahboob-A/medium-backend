@@ -20,9 +20,9 @@ class Article(TimeStampModel):
         description = models.CharField(verbose_name=_('Article Description'), max_length=255, blank=True)
         body = models.TextField(verbose_name=_('Article Body'))
         
-        banner_image = models.ImageField(verbose_name=_('Banner Image'), default='/article-default.png')
-        body_image_1 = models.ImageField(verbose_name=_('Body Image 1'), default='/article-default.png')
-        body_image_2 = models.ImageField(verbose_name=_('Body Image 2'), default='/article-default.png')
+        banner_image = models.ImageField(verbose_name=_('Banner Image'), upload_to='ArticleMedia/BannerImages', default='/article-default.png')
+        body_image_1 = models.ImageField(verbose_name=_('Body Image 1'), upload_to='ArticleMedia/BodyImage1', default='/article-default.png')
+        body_image_2 = models.ImageField(verbose_name=_('Body Image 2'), upload_to='ArticleMedia/BodyImage2', default='/article-default.png')
 
         
         tags = TaggableManager()
