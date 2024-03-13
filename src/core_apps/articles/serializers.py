@@ -26,7 +26,9 @@ class TagListField(serializers.Field):
 class ArticleSerializer(serializers.ModelSerializer): 
         ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
         author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
-        estimated_reading_time = serializers.ReadOnlyField()
+        estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
+        
+        average_rating = serializers.ReadOnlyField()
         
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
@@ -41,6 +43,9 @@ class ArticleSerializer(serializers.ModelSerializer):
         # ArticleView model has ForeignKey relation with Article Model 
         def get_views(self, obj): 
                 return ArticleViews.objects.filter(article=obj).count()
+
+        def get_average_rating(self, obj): 
+                return obj.average_rating()
 
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 

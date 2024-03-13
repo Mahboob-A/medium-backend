@@ -44,6 +44,18 @@ class Article(TimeStampModel):
         def view_count(self): 
                 return self.article_views.count()
 
+         # calculate average rating of individual article instannce 
+        def average_rating(self): 
+                # self.ratings.all() is the reverse relationship in the Rating model with Article model. 
+                # as Rating model has ForeignKey with Article model with related_name "ratings", 
+                # we are just getting all the ratings instances of this article instance. 
+                ratings = self.ratings.all()  # reverve relation with Rating model 
+
+                if ratings.count() > 0: 
+                        total_rating = sum(rating.rating for rating in ratings)
+                        average_rating = total_rating / ratings.count()
+                        return round(average_rating, 2)
+                return None 
 
 class ArticleViews(TimeStampModel): 
         ''' Model for storing each Article Being Viewed By Which User and with What IP Address'''
