@@ -17,6 +17,7 @@ from .serializers import ArticleSerializer
 from .pagination import ArticlePageNumberPagination
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
 from .permissions import IsOwnerOrReadOnly
+from .exceptions import AuthorNotFoundException
 from .filters import ArticleFilter
 
 
@@ -114,3 +115,30 @@ class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
                 ArticleViews.record_view(article=instance, user=request.user, viewer_ip=viewer_ip)
                 
                 return Response(serializer.data, status=status.HTTP_200_OK)
+        
+
+
+
+class AllArticleOfAuthor(generics.ListAPIView): 
+        ''' API for all articles of an Author'''
+        serializer_class = ArticleSerializer
+        pagination_class = ArticlePageNumberPagination
+        renderer_classes = [ArticlesJSONRenderer]
+        permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        filterset_class = ArticleFilter
+        ordering_fields = ['-crearted_at', '-updated_at']
+        filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+        
+        def get_queryset(self):
+                author_id = self.kwargs.get('author_id')
+                
+                if author_id: 
+                        try: 
+                                author = User.objects.get(id=author_id)
+                                self.queryset = author.articles.all()
+                                return self.queryset
+                                # self.queryset = Article.objects.filter(author=author)
+                                # return self.queryset
+                        except User.DoesNotExist: 
+                                raise AuthorNotFoundException(detail='Author ID is incorrect')
+                raise AuthorNotFoundException

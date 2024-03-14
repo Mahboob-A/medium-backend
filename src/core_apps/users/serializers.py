@@ -17,6 +17,7 @@ from django_countries.serializer_fields import CountryField
 from phonenumber_field.serializerfields import PhoneNumberField
 
 from core_apps.profiles.models import Profile
+from core_apps.profiles.serializer import UserDetailsProfileSerializer
 
 
 User = get_user_model()
@@ -24,17 +25,21 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer): 
         ''' Serializer for User '''
-        
+        profile_id = serializers.UUIDField(source='profile.id')
         gender = serializers.CharField(source="profile.gender")
         phone_number = PhoneNumberField(source="profile.phone_number")
         profile_photo = serializers.ReadOnlyField(source="profile.profile_photo.url")
         country = CountryField(source="profile.country")
         city = serializers.CharField(source="profile.city")
         twitter_handle = serializers.CharField(source="profile.twitter_handle")
+        total_followers = serializers.SerializerMethodField(read_only=True)
         
         class Meta: 
                 model = User
-                fields = ['id', 'email', 'first_name', 'last_name', 'gender', 'phone_number', 'profile_photo', 'country', 'city', 'twitter_handle']
+                fields = ['id', 'profile_id', 'email', 'first_name', 'last_name', 'gender', 'phone_number', 'profile_photo', 'country', 'city', 'twitter_handle', 'total_followers']
+
+        def get_total_followers(self, obj): 
+                return obj.profile.followers.all()
 
         def to_representation(self, instance):
                 representation =  super(UserSerializer, self).to_representation(instance)

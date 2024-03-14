@@ -28,7 +28,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
         estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
         
-        average_rating = serializers.ReadOnlyField()
+        average_rating = serializers.ReadOnlyField()  # average_rating is not declared as @property hense a method is declared 
         
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
@@ -85,7 +85,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         class Meta: 
                 model = Article
                 fields = ['id', 'author_details', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'banner_image', 'views', 'created_at', 'updated_at', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'created_at', 'updated_at', 
                 ]
         
         

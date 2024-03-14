@@ -10,4 +10,11 @@ class YouHaveAlreadyRatedException(APIException):
         default_detail = _('You have already rated this article')
         default_code = 'bad_request'
         
-        
+
+
+class YouCanNotRateYourOwnArticleException(APIException): 
+        status_code = HTTP_400_BAD_REQUEST
+        default_detail = _('You can not rate your own article')
+        default_code = 'bad_request'
+
+
