@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import filters, generics, permissions, status
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.exceptions import ValidationError
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -141,4 +142,5 @@ class AllArticleOfAuthor(generics.ListAPIView):
                                 # return self.queryset
                         except User.DoesNotExist: 
                                 raise AuthorNotFoundException(detail='Author ID is incorrect')
-                raise AuthorNotFoundException
+                else: 
+                        raise ValidationError('Author ID is required')

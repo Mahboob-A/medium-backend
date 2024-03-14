@@ -45,8 +45,11 @@ urlpatterns = [
     # articles app 
     path('api/v1/articles/', include('core_apps.articles.urls')), 
     
-    # rating app 
+    # ratings app 
     path('api/v1/ratings/', include('core_apps.ratings.urls')), 
+    
+    # bookmarks app 
+    path('api/v1/bookmarks/', include('core_apps.bookmarks.urls')),
     
 ]
 
