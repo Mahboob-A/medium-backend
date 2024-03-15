@@ -48,6 +48,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return self.phone_number 
     
     def __str__(self):
-        return self.first_name
+        return f'{self.first_name.title()} {self.last_name.title()}'
     
 

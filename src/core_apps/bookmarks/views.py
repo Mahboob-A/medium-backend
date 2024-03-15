@@ -4,6 +4,7 @@ from django.db import IntegrityError
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError, NotFound
+from rest_framework.response import Response
 
 from uuid import UUID, uuid4
 
@@ -13,6 +14,7 @@ from .models import Bookmark
 from .serializers import BookmarkSerializer
 from .exceptions import YouHaveAlreadyBookmarkedException
 from .paginations import BookmarkPageNumberPagination
+from .renderers import BookmarkJSONRenderer, BookmarksJSONRenderer
 
 
 
@@ -74,14 +76,37 @@ class BookmarkDestroyAPIView(generics.DestroyAPIView):
 
 
 class AllBookmarksOfUserAPIView(generics.ListAPIView): 
-        # queryset = Bookmark.objects.all()
         serializer_class = BookmarkSerializer
         permission_classes = [IsAuthenticated]
         pagination_class = BookmarkPageNumberPagination
+        renderer_classes = [BookmarksJSONRenderer]
         
+     
         def get_queryset(self):
                 bookmarks = Bookmark.objects.filter(user=self.request.user)
                 return bookmarks
+
+        def list(self, request, *args, **kwargs): 
+                queryset = self.get_queryset()
+                total_bookmarks = queryset.count()
+                page = self.paginate_queryset(queryset=queryset)
+                
+                
+                if page is not None: 
+                        serializer = self.get_serializer(queryset, many=True)
+                        response_data = {
+                                'total_bookmarks' : total_bookmarks, 
+                                'data' : serializer.data
+                        }
+                        return self.get_paginated_response(response_data)
+                
+                # if pagination has not been used. 
+                serializer = self.get_serializer(queryset, many=True)
+                response_data = {
+                        'total_bookmarks' : total_bookmarks, 
+                        'data' : serializer.data
+                }
+                return Response(response_data)        
                 
                 
         

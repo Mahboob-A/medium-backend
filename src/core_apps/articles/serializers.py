@@ -23,12 +23,13 @@ class TagListField(serializers.Field):
                                 continue
                         all_tags.append(tag)
                 return all_tags
-        
+
 
 
 class ArticleSerializer(serializers.ModelSerializer): 
         ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
-        author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
+        # addint "author_details" here results in each article in a article queryset. hense, adding this from view only 
+        # author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
         estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
         
         average_rating = serializers.ReadOnlyField()  # average_rating is not declared as @property hense a method is declared 
@@ -39,9 +40,12 @@ class ArticleSerializer(serializers.ModelSerializer):
         updated_at = serializers.SerializerMethodField()
         
         # all bookmarks of user and its count 
+        # the below fields also adds all the bookmarks made by all the users to this article. 
+        # if we need to know how many users have bookmarked this article, then add the below two fields. 
+        '''
         bookmarks = serializers.SerializerMethodField()
         total_bookmarks_count = serializers.SerializerMethodField()
-        
+        '''
 
         tags = TagListField()
         
@@ -56,6 +60,7 @@ class ArticleSerializer(serializers.ModelSerializer):
                 return obj.average_rating()
 
         # get bookmarks 
+        '''
         def get_bookmarks(self, obj): 
                 bookmarks = Bookmark.objects.filter(article=obj)
                 bookmark_serializer = BookmarkSerializer(bookmarks, many=True)
@@ -64,7 +69,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         # get bookmarks count 
         def get_total_bookmarks_count(self, obj): 
                 return Bookmark.objects.filter(article=obj).count()
-
+        '''
+        
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 
                 formatted_date = original_creation_date.strftime('%d/%m/%Y, %H:%M:%S')
@@ -102,8 +108,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         class Meta: 
                 model = Article
-                fields = ['id', 'author_details', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'bookmarks', 'bookmarks_1', 'total_bookmarks_count',
+                fields = ['id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 
                           'created_at', 'updated_at', 
                 ]
         
@@ -114,4 +120,49 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         
         
+class ArticleSerializerForAllArticleListView(serializers.ModelSerializer): 
+        ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
+         
+        author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
+        estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
+        
+        average_rating = serializers.ReadOnlyField()  # average_rating is not declared as @property hense a method is declared 
+        
+        banner_image = serializers.SerializerMethodField()
+        views = serializers.SerializerMethodField()
+        created_at = serializers.SerializerMethodField()
+        updated_at = serializers.SerializerMethodField()
+        
+
+        tags = TagListField()
+        
+        def get_banner_image(self, obj): 
+                return obj.banner_image.url 
+        
+        # ArticleView model has ForeignKey relation with Article Model 
+        def get_views(self, obj): 
+                return ArticleViews.objects.filter(article=obj).count()
+
+        def get_average_rating(self, obj): 
+                return obj.average_rating()
+
+        
+        def get_created_at(self, obj): 
+                original_creation_date = obj.created_at 
+                formatted_date = original_creation_date.strftime('%d/%m/%Y, %H:%M:%S')
+                return formatted_date
+        
+        def get_updated_at(self, obj): 
+                updated_date = obj.updated_at 
+                formatted_date = updated_date.strftime('%d/%m/%Y, %H:%M:%S')
+                return formatted_date
+
+        
+        
+        class Meta: 
+                model = Article
+                fields = ['author_details', 'id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 
+                          'created_at', 'updated_at', 
+                ]
         

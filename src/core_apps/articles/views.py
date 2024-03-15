@@ -14,13 +14,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 from .models import Article, ArticleReadTimeEngine, ArticleViews
-from .serializers import ArticleSerializer
+from .serializers import ArticleSerializer, ArticleSerializerForAllArticleListView
 from .pagination import ArticlePageNumberPagination
 from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
 from .permissions import IsOwnerOrReadOnly
 from .exceptions import AuthorNotFoundException
 from .filters import ArticleFilter
-
+from core_apps.profiles.serializer import ProfileSerializer
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class ArticleListCreateView(generics.ListCreateAPIView): 
         ''' Article API fot Listing and Creating Articles '''
         queryset = Article.objects.all()
-        serializer_class = ArticleSerializer
+        serializer_class = ArticleSerializerForAllArticleListView
         filterset_class = ArticleFilter 
         pagination_class = ArticlePageNumberPagination
         
@@ -44,8 +44,7 @@ class ArticleListCreateView(generics.ListCreateAPIView):
                 logger.info(
                         f'Article {serializer.data.get("title")} created by {self.request.user.first_name.title()} {self.request.user.last_name.title()}'
                 )
-                
-                
+
                 
                 
                 
@@ -57,7 +56,13 @@ class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         lookup_field = 'id'  # to retrive object similart to passing the id to method's param in function based view 
         parser_classes = [MultiPartParser, FormParser]  # to handle file/image upload 
         
-        def perform_update(self, serializer):
+        def update(self, request, *args, **kwargs):
+                # instance = serializer.save(author=self.request.user)
+                partial = kwargs.pop('partial', False)
+                instance = self.get_object()
+                serializer = self.get_serializer(instance, data=request.data, partial=partial)
+                serializer.is_valid(raise_exception=True)
+ 
                 instance = serializer.save(author=self.request.user)
                 
                 # TODO the old images are not being deleted after the patch or put update. Fix the issue. 
@@ -98,6 +103,19 @@ class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
                 # print(f"new body_image_1 path: {instance.body_image_1.path if instance.body_image_1 else 'None'}")
                 # print(f"New body_image_2 path: {instance.body_image_2.path if instance.body_image_2 else 'None'}")
                 
+                # add the authors details in the response 
+                profile = self.request.user.profile 
+                profile_serializer_data = ProfileSerializer(profile).data 
+        
+                
+                data = {}
+                data['authors_datails'] = profile_serializer_data
+                data['data'] =  serializer.data
+
+                # the Response is filtered in according to the renderer_classes defined in the API class. 
+                # the structure of data that is passed is defined in the renderer_classes in defined in the API class. 
+                return Response(data, status=status.HTTP_200_OK)
+                
                 
                 
         # update the view count as an Article is being retrived/viewed 
@@ -107,15 +125,27 @@ class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
                 except Http404: 
                         return Response({'message' : 'Article does not found'}, status=status.HTTP_404_NOT_FOUND)
 
-                # get the serializer class used in the API 
-                serializer = self.get_serializer(instance)
+                
                 
                 viewer_ip = request.META.get('REMOTE_ADDR', None)
                 
                 # add article view in ArticleViews model 
                 ArticleViews.record_view(article=instance, user=request.user, viewer_ip=viewer_ip)
                 
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                # add the authors details in the response 
+                profile = self.request.user.profile 
+                profile_serializer_data = ProfileSerializer(profile).data 
+                
+                # get the serializer class of Article used in the class 
+                article_serializer_data = self.get_serializer(instance).data
+                
+                data = {}
+                data['authors_datails'] = profile_serializer_data
+                data['data'] =  article_serializer_data
+
+                # the Response is filtered in according to the renderer_classes defined in the API class. 
+                # the structure of data that is passed is defined in the renderer_classes in defined in the API class. 
+                return Response(data, status=status.HTTP_200_OK)
         
 
 
@@ -144,3 +174,30 @@ class AllArticleOfAuthor(generics.ListAPIView):
                                 raise AuthorNotFoundException(detail='Author ID is incorrect')
                 else: 
                         raise ValidationError('Author ID is required')
+        
+        def list(self, request, *args, **kwargs):
+                queryset = self.get_queryset()
+                total_articles = queryset.count()
+                page = self.paginate_queryset(queryset=queryset)
+                
+                if page is not None: 
+                        article_serializer = self.get_serializer(queryset, many=True)
+                        profile_serializer = ProfileSerializer(self.request.user.profile)
+                        response_data = {
+                                'author_details' : profile_serializer.data,
+                                'total_articles' : total_articles, 
+                                'data' : article_serializer.data, 
+                                
+                        }
+                        return self.get_paginated_response(response_data)
+                
+                
+                # if pagination has not been used. 
+                article_serializer = self.get_serializer(queryset, many=True)
+                profile_serializer = ProfileSerializer(self.request.user.profile)
+                response_data = {
+                        'author_details' : profile_serializer.data,
+                        'total_articles' : total_articles, 
+                        'data' : article_serializer.data, 
+                }        
+                return Response(response_data)

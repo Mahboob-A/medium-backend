@@ -17,12 +17,18 @@ class ArticleJSONRenderer(JSONRenderer):
                         errors = data.get('errors', None)
                 else: 
                         errors = None
-
+                # print('data : ', data)
                 # if there are errors, then render as per default JSON style. 
                 if errors is not None: 
                         return super(ArticleJSONRenderer, self).render(data)
-                # else, render in the below way in JSON 
-                return json.dumps({'status_code' : status_code, 'article' : data})
+                else: 
+                        if 'author_details' in data: 
+                                author_details = data.pop('author_details')
+                                return json.dumps({'status_code' : status_code, 'author_details' : author_details, 'article' : data})
+                        
+                        return json.dumps({'status_code' : status_code, 'article' : data})
+
+               
 
 # for articles => *s 
 class ArticlesJSONRenderer(JSONRenderer): 
@@ -36,9 +42,15 @@ class ArticlesJSONRenderer(JSONRenderer):
                 
                 errors = data.get('errors', None)
                 
+                
+                
                 # if there are errors, then render as per default JSON style. 
                 if errors is not None: 
                         return super(ArticlesJSONRenderer, self).render(data)
-                # else, render in the below way in JSON 
-                return json.dumps({'status_code' : status_code, 'articles' : data})
+                else: 
+                        if 'author_details' in data: 
+                                author_details = data.pop('author_details')
+                                return json.dumps({'status_code' : status_code, 'author_details' : author_details, 'articles' : data})
+                        
+                        return json.dumps({'status_code' : status_code, 'articles' : data})
 
