@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, ArticleViews
+from .models import Article, ArticleViews, Clap
 from core_apps.profiles.serializer import ProfileSerializer
 
 from core_apps.bookmarks.models import Bookmark
@@ -121,7 +121,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         
 class ArticleSerializerForAllArticleListView(serializers.ModelSerializer): 
-        ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
+        ''' Serializer class to serialize Article Object for ListView of articles. '''
          
         author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
         estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
@@ -166,3 +166,14 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
                           'created_at', 'updated_at', 
                 ]
         
+
+class ClapSerializer(serializers.ModelSerializer): 
+        ''' Serializer for Clap model  '''
+        article_title = serializers.CharField(source='article.title', read_only=True)
+        user_first_name = serializers.CharField(source='user.first_name', read_only=True)
+        user_last_name = serializers.CharField(source='user.last_name', read_only=True)
+        
+        class Meta: 
+                model = Clap
+                ields = ['id',  'article_title', 'user_first_name', 'user_last_name', 'created_at']
+                read_only_fields = ['user']

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Article, ArticleViews
+from .models import Article, ArticleViews, Clap
 
 
 @admin.register(Article)
@@ -25,9 +25,17 @@ class ArticleAdmin(admin.ModelAdmin):
                 return obj.view_count()
         
 @admin.register(ArticleViews)
-class ArticleAdmin(admin.ModelAdmin): 
-        list_display = ['pkid', 'id', 'article', 'user', 'viewer_ip']
-        list_display_links = ['pkid', 'id', 'article', 'user']
+class ArticleViewAdmin(admin.ModelAdmin): 
+        list_display = ['id', 'article', 'user', 'viewer_ip']
+        list_display_links = [ 'id', 'article', 'user']
         list_filter =  ['created_at', 'updated_at']
         search_fields = ['article', 'user', 'viewer_ip']
         ordering = ['-created_at']
+
+
+@admin.register(Clap)
+class ClapAdmin(admin.ModelAdmin): 
+        list_display = ['id', 'article', 'user', ]
+        list_display_links = ['id', 'article', 'user']
+        list_filter =  ['created_at', 'updated_at']
+        

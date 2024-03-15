@@ -27,6 +27,9 @@ class Article(TimeStampModel):
         
         tags = TaggableManager()
         
+        # an user can clap multiple articles and an article can have clap of multiple users. 
+        clapps = models.ManyToManyField(User, through='Clap', realted_name='clapped_articles')
+        
         class Meta: 
                 verbose_name = _("Article")
                 verbose_name_plural = _("Articles")
@@ -77,3 +80,17 @@ class ArticleViews(TimeStampModel):
                 article_view, created = cls.objects.get_or_create(article=article, user=user, viewer_ip=viewer_ip)
                 article_view.save()
 
+
+
+
+class Clap(TimeStampModel): 
+        ''' Model to store the claps to an Article by Users '''
+        article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='claps')
+        user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='claps')
+        
+        class Meta: 
+                unique_together = ['article', 'user']
+                ordering = ['-created_at']
+        
+        def __str__(self) -> str:
+                return f'{self.user.first_name.title()} {self.user.last_name.title()} clapped the Article - {self.article.title}!'
