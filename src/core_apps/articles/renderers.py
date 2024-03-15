@@ -12,7 +12,7 @@ class ArticleJSONRenderer(JSONRenderer):
                 else: 
                         status_code = renderer_context.get('response').status_code
                 
-                # in case of DELETE request, the "data" will be None else "data" will hold queryset 
+                # in case of DELETE request, the "data" will be None else "data" will hold queryset or error codes 
                 if data is not None: 
                         errors = data.get('errors', None)
                 else: 

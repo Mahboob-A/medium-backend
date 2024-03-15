@@ -12,6 +12,8 @@ from core_apps.articles.models import Article
 from .models import Bookmark
 from .serializers import BookmarkSerializer
 from .exceptions import YouHaveAlreadyBookmarkedException
+from .paginations import BookmarkPageNumberPagination
+
 
 
 class BookmarkCreateAPIView(generics.CreateAPIView): 
@@ -50,7 +52,7 @@ class BookmarkDestroyAPIView(generics.DestroyAPIView):
                 
                 # Verify the uuid if it is correct uuid 
                 # try: 
-                #         UUID(article_id, version=4)
+                #         UUID(str(article_id), version=4)
                 # except ValueError: 
                 #         raise ValidationError('Invalid Article ID')
                 
@@ -69,5 +71,17 @@ class BookmarkDestroyAPIView(generics.DestroyAPIView):
                 instance.delete()
         
         
+
+
+class AllBookmarksOfUserAPIView(generics.ListAPIView): 
+        # queryset = Bookmark.objects.all()
+        serializer_class = BookmarkSerializer
+        permission_classes = [IsAuthenticated]
+        pagination_class = BookmarkPageNumberPagination
         
+        def get_queryset(self):
+                bookmarks = Bookmark.objects.filter(user=self.request.user)
+                return bookmarks
+                
+                
         

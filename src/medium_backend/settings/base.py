@@ -311,8 +311,18 @@ LOGGING = {
     "root": {
         "level": "INFO", 
         "handlers": ["console"], 
-    }
+    },
+    
+    # uncomment for django database query logm
+    # 'loggers': {
+    #     'django.db': {
+    #         'level': 'DEBUG',
+    #         'handlers': ['console'],
+    #     }
+    # }
 }
+
+
 
 
 

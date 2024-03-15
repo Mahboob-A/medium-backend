@@ -2,6 +2,9 @@ from rest_framework import serializers
 from .models import Article, ArticleViews
 from core_apps.profiles.serializer import ProfileSerializer
 
+from core_apps.bookmarks.models import Bookmark
+from core_apps.bookmarks.serializers import BookmarkSerializer
+
 
 class TagListField(serializers.Field): 
         ''' To get all the tags in a list/in list form '''
@@ -34,6 +37,11 @@ class ArticleSerializer(serializers.ModelSerializer):
         views = serializers.SerializerMethodField()
         created_at = serializers.SerializerMethodField()
         updated_at = serializers.SerializerMethodField()
+        
+        # all bookmarks of user and its count 
+        bookmarks = serializers.SerializerMethodField()
+        total_bookmarks_count = serializers.SerializerMethodField()
+        
 
         tags = TagListField()
         
@@ -46,6 +54,16 @@ class ArticleSerializer(serializers.ModelSerializer):
 
         def get_average_rating(self, obj): 
                 return obj.average_rating()
+
+        # get bookmarks 
+        def get_bookmarks(self, obj): 
+                bookmarks = Bookmark.objects.filter(article=obj)
+                bookmark_serializer = BookmarkSerializer(bookmarks, many=True)
+                return bookmark_serializer.data 
+        
+        # get bookmarks count 
+        def get_total_bookmarks_count(self, obj): 
+                return Bookmark.objects.filter(article=obj).count()
 
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 
@@ -85,7 +103,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         class Meta: 
                 model = Article
                 fields = ['id', 'author_details', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'created_at', 'updated_at', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'bookmarks', 'bookmarks_1', 'total_bookmarks_count',
+                          'created_at', 'updated_at', 
                 ]
         
         
