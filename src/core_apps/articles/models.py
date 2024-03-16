@@ -28,7 +28,7 @@ class Article(TimeStampModel):
         tags = TaggableManager()
         
         # an user can clap multiple articles and an article can have clap of multiple users. 
-        clapps = models.ManyToManyField(User, through='Clap', realted_name='clapped_articles')
+        clapps = models.ManyToManyField(User, through='Clap', related_name='clapped_articles')
         
         class Meta: 
                 verbose_name = _("Article")
@@ -63,7 +63,7 @@ class Article(TimeStampModel):
 class ArticleViews(TimeStampModel): 
         ''' Model for storing each Article Being Viewed By Which User and with What IP Address'''
         article = models.ForeignKey(Article, verbose_name=_("Article being viewed"), on_delete=models.CASCADE, related_name='article_views')
-        user = models.ForeignKey(User, verbose_name=_("Article viewd by User"), on_delete=models.CASCADE, related_name='user_viewed_article')
+        user = models.ForeignKey(User, verbose_name=_("Article viewd by User"), on_delete=models.CASCADE, related_name='article_views')
         viewer_ip = models.GenericIPAddressField(verbose_name=_("Viewer IP"), null=True, blank=True)
 
         class Meta:         

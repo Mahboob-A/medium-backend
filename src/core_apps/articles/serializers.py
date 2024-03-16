@@ -28,7 +28,7 @@ class TagListField(serializers.Field):
 
 class ArticleSerializer(serializers.ModelSerializer): 
         ''' Serializer class to serialize Article Object with other relevant details. Also passes Author Details while Serialize. '''
-        # addint "author_details" here results in each article in a article queryset. hense, adding this from view only 
+        # add "author_details" here results in each article in a article queryset. hense, adding this from view only 
         # author_details = ProfileSerializer(source='author.profile', read_only=True)  # Article.author (author is ForeignKey with User.) => In Profile model, Profile has one-to-one with User with related name 'profile'
         estimated_reading_time = serializers.ReadOnlyField() # as estimated_reading_time is property, no need to have any method here 
         
@@ -36,6 +36,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
+        claps_count = serializers.SerializerMethodField()
         created_at = serializers.SerializerMethodField()
         updated_at = serializers.SerializerMethodField()
         
@@ -54,10 +55,18 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         # ArticleView model has ForeignKey relation with Article Model 
         def get_views(self, obj): 
-                return ArticleViews.objects.filter(article=obj).count()
+                # reverse relationship of Article with ArticleViews 
+                # return ArticleViews.objects.filter(article=obj).count()
+                return obj.article_views.count()
 
         def get_average_rating(self, obj): 
                 return obj.average_rating()
+
+        def get_claps_count(self, obj): 
+                # reverse relationship of Article with Claps model. 
+                return obj.claps.count() 
+                # user = obj.author 
+                # return Clap.objects.filter(article=obj, user=user).count()
 
         # get bookmarks 
         '''
@@ -109,7 +118,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         class Meta: 
                 model = Article
                 fields = ['id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count',
                           'created_at', 'updated_at', 
                 ]
         
@@ -130,6 +139,7 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
+        claps_count = serializers.SerializerMethodField()
         created_at = serializers.SerializerMethodField()
         updated_at = serializers.SerializerMethodField()
         
@@ -146,6 +156,12 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         def get_average_rating(self, obj): 
                 return obj.average_rating()
 
+        def get_claps_count(self, obj): 
+                # reverse relationship of Article with Claps model. 
+                return obj.claps.count() 
+                # user = obj.author 
+                # return Clap.objects.filter(article=obj, user=user).count()
+        
         
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 
@@ -157,12 +173,16 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
                 formatted_date = updated_date.strftime('%d/%m/%Y, %H:%M:%S')
                 return formatted_date
 
-        
+        def create(self, validated_data): 
+                tags = validated_data.pop('tags')
+                article = Article.objects.create(**validated_data)
+                article.tags.set(tags)
+                return article 
         
         class Meta: 
                 model = Article
                 fields = ['author_details', 'id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count',
                           'created_at', 'updated_at', 
                 ]
         

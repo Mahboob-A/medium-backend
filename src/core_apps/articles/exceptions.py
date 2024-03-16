@@ -9,3 +9,9 @@ class AuthorNotFoundException(APIException):
         status_code = HTTP_400_BAD_REQUEST
         default_detail = _('Author not found')
         default_code = 'bad_request'
+        
+
+class AlreadyClappedOnThisArticle(APIException): 
+        status_code = HTTP_400_BAD_REQUEST
+        default_detail = _('You have already clapped on this article')
+        default_code = 'bad_request'
