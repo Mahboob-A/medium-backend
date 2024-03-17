@@ -20,7 +20,10 @@ from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
 from .permissions import IsOwnerOrReadOnly
 from .exceptions import AuthorNotFoundException, AlreadyClappedOnThisArticle
 from .filters import ArticleFilter
+
 from core_apps.profiles.serializer import ProfileSerializer
+from core_apps.responses.serializers import ResponseSerializer
+from core_apps.responses.paginations import ResponsesPageNumberPagination
 
 User = get_user_model()
 logger = logging.getLogger(__name__)
@@ -45,8 +48,8 @@ class ArticleListCreateView(generics.ListCreateAPIView):
                         f'Article {serializer.data.get("title")} created by {self.request.user.first_name.title()} {self.request.user.last_name.title()}'
                 )
 
-                
-                
+
+        
                 
 class ArticleRetriveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView): 
         queryset = Article.objects.all()

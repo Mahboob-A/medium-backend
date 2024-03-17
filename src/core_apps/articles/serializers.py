@@ -5,6 +5,7 @@ from core_apps.profiles.serializer import ProfileSerializer
 from core_apps.bookmarks.models import Bookmark
 from core_apps.bookmarks.serializers import BookmarkSerializer
 from core_apps.responses.serializers import ResponseSerializer
+from core_apps.responses.paginations import ResponsesPageNumberPagination
 
 class TagListField(serializers.Field): 
         ''' To get all the tags in a list/in list form '''
@@ -40,7 +41,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         
         # article responses 
         responses = ResponseSerializer(many=True, read_only=True)
-        # TODO check if the source of response_count is related to the "responses" field above 
+        # the source => reverse relationship of Respons model with Article model. 
+        # as related_name is same as the field name in the serailizer class, thus source is not needed. 
         response_count = serializers.IntegerField(source='responses.count', read_only=True)
         
         created_at = serializers.SerializerMethodField()
@@ -155,8 +157,8 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         responses = ResponseSerializer(many=True, read_only=True)
         response_count = serializers.IntegerField(source='responses.count', read_only=True)
         
-        created_at = serializers.SerializerMethodField()
-        updated_at = serializers.SerializerMethodField()
+        created_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S')
+        updated_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S')
         
 
         tags = TagListField()
@@ -177,21 +179,7 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
                 # user = obj.author 
                 # return Clap.objects.filter(article=obj, user=user).count()
         
-        # article responses count 
-        def get_response_count(self, obj): 
-                return obj.responses.count()
         
-        
-        def get_created_at(self, obj): 
-                original_creation_date = obj.created_at 
-                formatted_date = original_creation_date.strftime('%d/%m/%Y, %H:%M:%S')
-                return formatted_date
-        
-        def get_updated_at(self, obj): 
-                updated_date = obj.updated_at 
-                formatted_date = updated_date.strftime('%d/%m/%Y, %H:%M:%S')
-                return formatted_date
-
         def create(self, validated_data): 
                 tags = validated_data.pop('tags')
                 article = Article.objects.create(**validated_data)
@@ -201,8 +189,8 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         class Meta: 
                 model = Article
                 fields = ['author_details', 'id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count',
-                          'responses', 'response_count',  'created_at', 'updated_at', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count', 'responses', 'response_count',
+                           'created_at', 'updated_at', 
                 ]
         
 

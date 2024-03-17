@@ -14,9 +14,9 @@ class Response(TimeStampModel):
         ''' Model class responsible for replies/responses/comments of Users to an Article '''
         user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses')
         article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='responses')
-        parent_response = models.ForeignKey('Self', verbose_name=_("Reply of another parent Response"), on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
+        parent_response = models.ForeignKey('self', verbose_name=_("Reply of another parent Response"), on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
 
-        context = models.TextField(verbose_name=_('Response Content'))
+        content = models.TextField(verbose_name=_('Response Content'))
         
         class Meta: 
                 verbose_name = 'Response'

@@ -9,7 +9,7 @@ from core_apps.articles.models import Article
 
 from .models import Response
 from .serializers import ResponseSerializer
-
+from .paginations import ResponsesPageNumberPagination
 
 
 
@@ -18,6 +18,7 @@ class ResponseListCreateView(generics.ListCreateAPIView):
         queryset = Response.objects.all()
         serializer_class = ResponseSerializer
         permission_classes = [IsAuthenticated]
+        pagination_class = ResponsesPageNumberPagination
         
         # All responses of an article. 
         def get_queryset(self):

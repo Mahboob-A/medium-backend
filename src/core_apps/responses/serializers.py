@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 
 from .models import Response
+from .paginations import ResponsesPageNumberPagination
 
 
 
@@ -16,3 +17,4 @@ class ResponseSerializer(serializers.ModelSerializer):
                 model = Response
                 fields = ['id',  'article_title', 'user_first_name', 'user_last_name',  'parent_response', 'content', 'created_at']
                 read_only_fields = ['user']
+                # pagination_class = ResponsesPageNumberPagination

@@ -33,6 +33,7 @@ class Article(TimeStampModel):
         class Meta: 
                 verbose_name = _("Article")
                 verbose_name_plural = _("Articles")
+                ordering = ['-created_at']
         
         def __str__(self): 
                 return f"{self.author.first_name} {self.author.last_name}'s Article - {self.title}"
