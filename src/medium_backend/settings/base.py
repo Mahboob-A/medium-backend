@@ -78,6 +78,7 @@ LOCAL_APPS = [
     'core_apps.articles', 
     'core_apps.ratings', 
     'core_apps.bookmarks', 
+    'core_apps.responses',
 ]
 
 # installed apps 
@@ -313,7 +314,7 @@ LOGGING = {
         "handlers": ["console"], 
     },
     
-    # uncomment for django database query logm
+    # uncomment for django database query logs
     # 'loggers': {
     #     'django.db': {
     #         'level': 'DEBUG',
