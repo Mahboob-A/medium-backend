@@ -19,6 +19,7 @@ class ResponseListCreateView(generics.ListCreateAPIView):
         serializer_class = ResponseSerializer
         permission_classes = [IsAuthenticated]
         
+        # All responses of an article. 
         def get_queryset(self):
                 article_id = self.kwargs.get('article_id')
                 return Response.objects.filter(article__id=article_id, parent_response=None)

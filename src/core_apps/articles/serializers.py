@@ -4,7 +4,7 @@ from core_apps.profiles.serializer import ProfileSerializer
 
 from core_apps.bookmarks.models import Bookmark
 from core_apps.bookmarks.serializers import BookmarkSerializer
-
+from core_apps.responses.serializers import ResponseSerializer
 
 class TagListField(serializers.Field): 
         ''' To get all the tags in a list/in list form '''
@@ -37,6 +37,12 @@ class ArticleSerializer(serializers.ModelSerializer):
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
         claps_count = serializers.SerializerMethodField()
+        
+        # article responses 
+        responses = ResponseSerializer(many=True, read_only=True)
+        # TODO check if the source of response_count is related to the "responses" field above 
+        response_count = serializers.IntegerField(source='responses.count', read_only=True)
+        
         created_at = serializers.SerializerMethodField()
         updated_at = serializers.SerializerMethodField()
         
@@ -80,6 +86,10 @@ class ArticleSerializer(serializers.ModelSerializer):
                 return Bookmark.objects.filter(article=obj).count()
         '''
         
+        # article responses count 
+        def get_response_count(self, obj): 
+                return obj.responses.count()
+        
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 
                 formatted_date = original_creation_date.strftime('%d/%m/%Y, %H:%M:%S')
@@ -118,8 +128,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         class Meta: 
                 model = Article
                 fields = ['id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
-                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count',
-                          'created_at', 'updated_at', 
+                          'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count', 
+                          'responses', 'response_count',  'created_at', 'updated_at', 
                 ]
         
         
@@ -140,6 +150,11 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         banner_image = serializers.SerializerMethodField()
         views = serializers.SerializerMethodField()
         claps_count = serializers.SerializerMethodField()
+        
+        # article responses 
+        responses = ResponseSerializer(many=True, read_only=True)
+        response_count = serializers.IntegerField(source='responses.count', read_only=True)
+        
         created_at = serializers.SerializerMethodField()
         updated_at = serializers.SerializerMethodField()
         
@@ -162,6 +177,10 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
                 # user = obj.author 
                 # return Clap.objects.filter(article=obj, user=user).count()
         
+        # article responses count 
+        def get_response_count(self, obj): 
+                return obj.responses.count()
+        
         
         def get_created_at(self, obj): 
                 original_creation_date = obj.created_at 
@@ -183,7 +202,7 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
                 model = Article
                 fields = ['author_details', 'id', 'title', 'slug', 'description', 'body', 'banner_image', 'body_image_1', 'body_image_2', 
                           'tags', 'estimated_reading_time', 'average_rating',  'banner_image', 'views', 'claps_count',
-                          'created_at', 'updated_at', 
+                          'responses', 'response_count',  'created_at', 'updated_at', 
                 ]
         
 

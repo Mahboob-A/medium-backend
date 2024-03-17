@@ -51,6 +51,9 @@ urlpatterns = [
     # bookmarks app 
     path('api/v1/bookmarks/', include('core_apps.bookmarks.urls')),
     
+    # responses app
+    path('api/v1/responses/', include('core_apps.responses.urls')),
+    
 ]
 
 
