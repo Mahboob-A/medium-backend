@@ -19,6 +19,7 @@ services:
       - postgres 
       - mailhog
       - redis
+      - elasticsearch-drf
     command: /start  # start command 
     networks: 
       - medium-backend-api-network 
@@ -34,8 +35,17 @@ services:
       - ./.envs/.dev/.postgres 
     networks: 
       - medium-backend-api-network 
-
-
+      
+  elasticsearch-drf: 
+    image: elasticsearch:7.17.9 
+    environment: 
+      - discovery.type=single-node 
+    ports: 
+      - "9200:9200"
+    networks:
+    -   medium-backend-api-network 
+    
+    
   mailhog: 
     image: mailhog/mailhog:v1.0.0
     container_name: mailhog
