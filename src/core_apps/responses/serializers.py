@@ -1,28 +1,18 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _ 
-from django.contrib.auth import get_user_model
 
-from core_apps.common.models import TimeStampModel
-from core_apps.articles.models import Article
+from rest_framework import serializers
 
 
-User = get_user_model()
+from .models import Response
 
 
 
-class Response(TimeStampModel): 
-        ''' Model class responsible for replies/responses/comments of Users to an Article '''
-        user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responses')
-        article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='responses')
-        parent_response = models.ForeignKey('Self', verbose_name=_("Reply of another parent Response"), on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
-
-        context = models.TextField(verbose_name=_('Response Content'))
+class ReponseSerializer(serializers.ModelSerializer): 
+        ''' Serializer class for Reponse model.  '''
+        article_title = serializers.CharField(source='article.title', read_only=True)
+        user_first_name = serializers.CharField(source='user.first_name', read_only=True)
+        user_last_name = serializers.CharField(source='user.last_name', read_only=True)
         
         class Meta: 
-                verbose_name = 'Response'
-                verbose_name_plural = 'Responses'
-                ordering = ['-created_at']
-
-
-        def __str__(self) -> str:
-                return f'{self.user.first_name.title()} {self.user.last_name.title()} commented on article - {self.article.title}'
+                model = Response
+                fields = ['id',  'article_title', 'user_first_name', 'user_last_name',  'parent_response', 'content', 'created_at']
+                read_only_fields = ['user']
