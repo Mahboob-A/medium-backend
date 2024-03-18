@@ -20,6 +20,7 @@ media
 staticfiles
 .envs/* 
 !.envs/.dev/
+htmlcov/
 
 
 

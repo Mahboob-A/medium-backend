@@ -102,10 +102,11 @@ superuser:
 
 
 # ### Pytest Commands
-pytest-no-wrn-cdcov:
+pytest-no-wrn-codecov:
 	docker compose -f dev.yml run --rm api pytest -p no:warnigns --cov=. -v  
 
-
+pytest-no-wrn-codecov-html:
+	docker compose -f dev.yml run --rm api pytest -p no:warnigns --cov=. --cov-report html
 
 
 
