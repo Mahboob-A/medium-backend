@@ -60,6 +60,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return f"{self.first_name.title()} {self.last_name.title()}"
 
     @property
+    def get_short_name(self):
+        return self.first_name
+
+    @property
     def get_email(self):
         return self.email
 

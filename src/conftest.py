@@ -9,7 +9,7 @@ register(UserFactory)
 
 @pytest.fixture
 def normal_user(db, user_factory):
-    new_user = user_factory.create()
+    new_user = user_factory.create()  
     return new_user
 
 

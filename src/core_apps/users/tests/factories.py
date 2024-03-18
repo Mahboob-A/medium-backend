@@ -10,22 +10,22 @@ faker = FakerFactory().create()
 User = get_user_model()
 
 
-@factory.django.mute_signal(post_save)
+@factory.django.mute_signals(post_save)
 class UserFactory(factory.django.DjangoModelFactory): 
 
     class Meta:
         model = User
 
-    first_name = factory.LazyAttribute(lambda x: faker.first_name)
-    last_name = factory.LazyAttribute(lambda x: faker.last_name)                
-    email = factory.LazyAttribute(lambda x: faker.email)
-    password = factory.LazyAttribute(lambda x: faker.password)
+    first_name = factory.LazyAttribute(lambda x: faker.first_name())
+    last_name = factory.LazyAttribute(lambda x: faker.last_name())                
+    email = factory.LazyAttribute(lambda x: faker.email())
+    password = factory.LazyAttribute(lambda x: faker.password())
     is_active = True 
     is_staff = False 
 
     # def _create_user(self, first_name, last_name, email, password, **extra_fields):
     @classmethod
-    def _create(cls, model_class, *args, **kwargs):   
+    def _create(cls, model_class, *args, **kwargs):   # Custom User's Manager's create method  
         manager = cls._get_manager(model_class)
         if "is_superuser" in kwargs:
             return manager.create_superuser(*args, **kwargs)

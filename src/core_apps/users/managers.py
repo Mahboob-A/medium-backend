@@ -7,14 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 class CustomUserManager(BaseUserManager):
     def _validate_email(self, email):
+        if not email:
+            raise ValidationError(_("Please provide an email address."))
+        email = self.normalize_email(email)
         try:
-            if not email:
-                raise ValidationError(_("Please provide an email address."))
-            else:
-                email = self.normalize_email(email)
-                validate_email(email)
-        except ValidationError:
-            return ValidationError(_("Please provide a valid email address."))
+            validate_email(email)
+        except ValidationError as e:
+            raise ValidationError(_("Please provide a valid email address.")) from e
 
     def _validate_fields(self, first_name, last_name, email, password):
         if not first_name:
