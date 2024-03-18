@@ -11,7 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-# TODO change in prod - the settings file to production.py 
+# TODO change in prod - the settings file to production.py
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "medium_backend.settings.dev")
 
 application = get_wsgi_application()

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from django.utils.translation import gettext_lazy as _  
+from django.utils.translation import gettext_lazy as _
 
 
 class ProfilesConfig(AppConfig):
@@ -7,9 +7,6 @@ class ProfilesConfig(AppConfig):
     name = "core_apps.profiles"
     verbose_name = _("Profile")
     verbose_name_plural = _("Profiles")
-    
-    def ready(self): 
+
+    def ready(self):
         from core_apps.profiles import signals
-
-
-
