@@ -1,20 +1,19 @@
-from django.shortcuts import render
-from django.db import IntegrityError
-
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError, NotFound
-from rest_framework.response import Response
-
 from uuid import UUID, uuid4
+
+from django.db import IntegrityError
+from django.shortcuts import render
+from rest_framework import generics
+from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from core_apps.articles.models import Article
 
-from .models import Bookmark
-from .serializers import BookmarkSerializer
 from .exceptions import YouHaveAlreadyBookmarkedException
+from .models import Bookmark
 from .paginations import BookmarkPageNumberPagination
 from .renderers import BookmarkJSONRenderer, BookmarksJSONRenderer
+from .serializers import BookmarkSerializer
 
 
 class BookmarkCreateAPIView(generics.CreateAPIView):

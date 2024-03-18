@@ -1,15 +1,12 @@
 from django.shortcuts import render
-
 from django_elasticsearch_dsl_drf.filter_backends import (
+    DefaultOrderingFilterBackend,
     FilteringFilterBackend,
     IdsFilterBackend,
     OrderingFilterBackend,
-    DefaultOrderingFilterBackend,
     SearchFilterBackend,
 )
-
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-
 from rest_framework.permissions import AllowAny
 
 from .documents import ArticleDocument

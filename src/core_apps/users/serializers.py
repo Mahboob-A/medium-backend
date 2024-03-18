@@ -1,23 +1,21 @@
 # django
-from django.contrib.auth import get_user_model
-
-# drf
-from rest_framework import serializers
-
 # allauth
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 
 # dj rest auth
 from dj_rest_auth.registration.serializers import RegisterSerializer
+from django.contrib.auth import get_user_model
 
 # others
 from django_countries.serializer_fields import CountryField
 from phonenumber_field.serializerfields import PhoneNumberField
 
+# drf
+from rest_framework import serializers
+
 from core_apps.profiles.models import Profile
 from core_apps.profiles.serializer import UserDetailsProfileSerializer
-
 
 User = get_user_model()
 

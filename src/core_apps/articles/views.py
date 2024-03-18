@@ -1,33 +1,30 @@
-from django.shortcuts import render, get_object_or_404
 import logging
 
-from django.http import Http404, HttpResponse
-from django.core.files.storage import default_storage
 from django.contrib.auth import get_user_model
-
-from rest_framework.response import Response
-from rest_framework import filters, generics, permissions, status
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.exceptions import ValidationError
-
+from django.core.files.storage import default_storage
+from django.http import Http404, HttpResponse
+from django.shortcuts import get_object_or_404, render
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, generics, permissions, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.response import Response
 
+from core_apps.profiles.serializer import ProfileSerializer
+from core_apps.responses.paginations import ResponsesPageNumberPagination
+from core_apps.responses.serializers import ResponseSerializer
 
+from .exceptions import AlreadyClappedOnThisArticle, AuthorNotFoundException
+from .filters import ArticleFilter
 from .models import Article, ArticleReadTimeEngine, ArticleViews, Clap
+from .pagination import ArticlePageNumberPagination
+from .permissions import IsOwnerOrReadOnly
+from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
 from .serializers import (
     ArticleSerializer,
     ArticleSerializerForAllArticleListView,
     ClapSerializer,
 )
-from .pagination import ArticlePageNumberPagination
-from .renderers import ArticleJSONRenderer, ArticlesJSONRenderer
-from .permissions import IsOwnerOrReadOnly
-from .exceptions import AuthorNotFoundException, AlreadyClappedOnThisArticle
-from .filters import ArticleFilter
-
-from core_apps.profiles.serializer import ProfileSerializer
-from core_apps.responses.serializers import ResponseSerializer
-from core_apps.responses.paginations import ResponsesPageNumberPagination
 
 User = get_user_model()
 logger = logging.getLogger(__name__)

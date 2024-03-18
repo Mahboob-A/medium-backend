@@ -1,12 +1,11 @@
-from django.db import models
-
-from django.contrib.auth import get_user_model
-from django.utils.translation import gettext_lazy as _
-
 from autoslug import AutoSlugField
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 from taggit.managers import TaggableManager
 
 from core_apps.common.models import TimeStampModel
+
 from .article_read_time_engine import ArticleReadTimeEngine
 
 User = get_user_model()

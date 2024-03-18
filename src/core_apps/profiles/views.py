@@ -1,32 +1,31 @@
+from django.contrib.auth import get_user_model
+
+# django
+from django.core.mail import send_mail
 from django.shortcuts import render
+from rest_framework import generics, status
+from rest_framework.exceptions import NotFound
+from rest_framework.parsers import MultiPartParser  # for file uploads
+
+# drf
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 # Create your views here.
 # TODO change the .dev into production in Production
 from medium_backend.settings.dev import DEFAULT_FROM_EMAIL
 
-# django
-from django.core.mail import send_mail
-from django.contrib.auth import get_user_model
-
-# drf
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.exceptions import NotFound
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser  # for file uploads
-from rest_framework import generics, status
-
 # local
 from .exception import CanNotFollowYouself
-from .pagination import ProfilePagination
 from .models import Profile
+from .pagination import ProfilePagination
 from .renderers import ProfileJSONRenderer, ProfilesJSONRenderer
 from .serializer import (
-    ProfileUpdateSerializer,
     ProfileSerializer,
+    ProfileUpdateSerializer,
     UserFollowerAndFollowingSerializer,
 )
-
 
 User = get_user_model()
 

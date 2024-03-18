@@ -1,12 +1,11 @@
 from django.urls import path
 
 from .views import (
+    AllArticleOfAuthor,
     ArticleListCreateView,
     ArticleRetriveUpdateDestroyView,
-    AllArticleOfAuthor,
     ClapCreateDestroyView,
 )
-
 
 urlpatterns = [
     path("", ArticleListCreateView.as_view(), name="article_list_create_api"),

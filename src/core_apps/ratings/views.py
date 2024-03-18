@@ -1,14 +1,13 @@
-from django.shortcuts import render
 from django.db import IntegrityError
-
+from django.shortcuts import render
 from rest_framework import generics, permissions
 from rest_framework.exceptions import ValidationError
 
-from core_apps.ratings.exceptions import (
-    YouHaveAlreadyRatedException,
-    YouCanNotRateYourOwnArticleException,
-)
 from core_apps.articles.models import Article
+from core_apps.ratings.exceptions import (
+    YouCanNotRateYourOwnArticleException,
+    YouHaveAlreadyRatedException,
+)
 
 from .models import Ratings
 from .serializers import RatingSerializer

@@ -1,12 +1,10 @@
 import logging
 
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
-
 from django_elasticsearch_dsl.registries import registry
 
 from core_apps.articles.models import Article
-
 
 logger = logging.getLogger(__name__)
 

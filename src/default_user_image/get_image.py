@@ -1,5 +1,6 @@
-import requests
 import json
+
+import requests
 
 URL = "https://img.freepik.com/free-photo/portrait-white-man-isolated_53876-40306.jpg"
 

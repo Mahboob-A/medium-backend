@@ -1,11 +1,12 @@
 from rest_framework import serializers
-from .models import Article, ArticleViews, Clap
-from core_apps.profiles.serializer import ProfileSerializer
 
 from core_apps.bookmarks.models import Bookmark
 from core_apps.bookmarks.serializers import BookmarkSerializer
-from core_apps.responses.serializers import ResponseSerializer
+from core_apps.profiles.serializer import ProfileSerializer
 from core_apps.responses.paginations import ResponsesPageNumberPagination
+from core_apps.responses.serializers import ResponseSerializer
+
+from .models import Article, ArticleViews, Clap
 
 
 class TagListField(serializers.Field):

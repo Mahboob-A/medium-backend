@@ -1,11 +1,10 @@
 from django.urls import path
 
 from .views import (
+    AllBookmarksOfUserAPIView,
     BookmarkCreateAPIView,
     BookmarkDestroyAPIView,
-    AllBookmarksOfUserAPIView,
 )
-
 
 urlpatterns = [
     path("bookmark/list/", AllBookmarksOfUserAPIView.as_view(), name="bookmark_lists"),

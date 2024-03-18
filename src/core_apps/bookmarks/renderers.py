@@ -1,5 +1,6 @@
-from rest_framework.renderers import JSONRenderer
 from json import dumps
+
+from rest_framework.renderers import JSONRenderer
 
 
 class BookmarkJSONRenderer(JSONRenderer):

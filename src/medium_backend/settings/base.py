@@ -14,8 +14,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 ############################ Path and Env
 
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
 
 import environ
 

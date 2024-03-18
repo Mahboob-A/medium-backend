@@ -1,15 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-
-from rest_framework import generics
+from django.shortcuts import get_object_or_404, render
+from rest_framework import generics, status
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
 
 from core_apps.articles.models import Article
 
 from .models import Response
-from .serializers import ResponseSerializer
 from .paginations import ResponsesPageNumberPagination
+from .serializers import ResponseSerializer
 
 
 class ResponseListCreateView(generics.ListCreateAPIView):
