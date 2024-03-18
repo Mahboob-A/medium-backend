@@ -54,6 +54,9 @@ urlpatterns = [
     # responses app
     path('api/v1/responses/', include('core_apps.responses.urls')),
     
+    # searches app (elastic search)
+    path('api/v1/es/', include('core_apps.searches.urls')),
+    
 ]
 
 

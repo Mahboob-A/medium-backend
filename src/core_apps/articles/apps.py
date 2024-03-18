@@ -7,3 +7,5 @@ class ArticlesConfig(AppConfig):
     verbose_name = _("Article")
     verbose_name_plural = _("Articles")
     
+    def ready(self) -> None:
+        import core_apps.searches.signals 

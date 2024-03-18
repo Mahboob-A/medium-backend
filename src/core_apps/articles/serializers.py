@@ -157,8 +157,8 @@ class ArticleSerializerForAllArticleListView(serializers.ModelSerializer):
         responses = ResponseSerializer(many=True, read_only=True)
         response_count = serializers.IntegerField(source='responses.count', read_only=True)
         
-        created_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S')
-        updated_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S')
+        created_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S', read_only=True)
+        updated_at = serializers.DateTimeField(format='%d/%m/%Y, %H:%M:%S', read_only=True)
         
 
         tags = TagListField()

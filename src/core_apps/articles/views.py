@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class ArticleListCreateView(generics.ListCreateAPIView): 
         ''' Article API fot Listing and Creating Articles '''
         queryset = Article.objects.all()
-        serializer_class = ArticleSerializerForAllArticleListView
+        serializer_class = ArticleSerializerForAllArticleListView 
         filterset_class = ArticleFilter 
         pagination_class = ArticlePageNumberPagination
         

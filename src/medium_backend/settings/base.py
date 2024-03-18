@@ -301,7 +301,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ELASTICSEARCH_DSL = {
     "default": {
         "hosts": "elasticsearch-drf:9200",
-    }
+    },
 }
 
 ########################################################
