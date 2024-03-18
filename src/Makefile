@@ -20,6 +20,23 @@ docker-logs-api:
 docker-restart-api: 
 	docker compose -f dev.yml restart api 
 
+docker-exec-api: 
+	docker compose -f dev.yml exec api /bin/bash 
+
+# ## 
+
+
+# ### Docker Volume and Postgres Database 
+
+docker-volume: 
+	docker volume inspect src_dev_postgres_data
+
+docker-exec-postgres: 
+	docker compose -f dev.yml exec postgres /bin/bash 
+
+medium-database: 
+	docker compose -f dev.yml exec postgres psql --username=mahboob --dbname=medium-db 
+
 # ## 
 
 
@@ -84,15 +101,10 @@ superuser:
 
 
 
-# ### Docker Volume and Postgres Database 
+# ### Pytest Commands
+pytest-no-wrn-cdcov:
+	docker compose -f dev.yml run --rm api pytest -p no:warnigns --cov=. -v  
 
-docker-volume: 
-	docker volume inspect src_dev_postgres_data
-
-medium-database: 
-	docker compose -f dev.yml exec postgres psql --username=mahboob --dbname=medium-db 
-
-# ## 
 
 
 

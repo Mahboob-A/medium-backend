@@ -75,6 +75,8 @@ class BookmarkDestroyAPIView(generics.DestroyAPIView):
 
 
 class AllBookmarksOfUserAPIView(generics.ListAPIView):
+    """All bookmarks of an User"""
+
     serializer_class = BookmarkSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = BookmarkPageNumberPagination
