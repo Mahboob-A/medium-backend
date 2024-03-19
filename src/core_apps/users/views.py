@@ -34,7 +34,7 @@ class CustomUserDetailsView2(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        user = User.objects.get(id=self.request.user.id)
+        user = User.objects.get(id=request.user.id)
         serializer = UserSerializer(user)
         return Response(
             {"status": "success", "data": serializer.data}, status=status.HTTP_200_OK

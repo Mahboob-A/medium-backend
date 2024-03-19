@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 # For testing models that needs to use signals, comment the decorator.
-@factory.django.mute_signals(post_save)
+# @factory.django.mute_signals(post_save)
 class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
