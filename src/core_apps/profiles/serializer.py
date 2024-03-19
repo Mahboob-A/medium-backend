@@ -50,9 +50,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_total_followers(self, obj):
         """
         return obj.followers.count() vs return obj.followers.all().count()
-        
-        The latter one loads all the followers in the memory then counts, while the former leverages 
-        the COUNT of database without loading all the objects in memory - thus making it more efficient. 
+
+        The latter one loads all the followers in the memory then counts, while the former leverages
+        the COUNT of database without loading all the objects in memory - thus making it more efficient.
         """
         return obj.followers.count()
 

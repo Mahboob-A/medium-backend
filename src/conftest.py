@@ -1,9 +1,8 @@
 import pytest
-from pytest_factoryboy import register
-
-from django.contrib.sessions.middleware import SessionMiddleware
 from django.contrib.auth.middleware import AuthenticationMiddleware
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.test import RequestFactory
+from pytest_factoryboy import register
 
 from core_apps.users.tests.factories import UserFactory
 
@@ -13,7 +12,7 @@ register(UserFactory)
 
 @pytest.fixture
 def normal_user(db, user_factory):
-    new_user = user_factory.create()  
+    new_user = user_factory.create()
     return new_user
 
 
@@ -23,17 +22,17 @@ def super_user(db, user_factory):
     return new_user
 
 
-# to user registration serailizer with mock HTTP request object. 
+# to user registration serailizer with mock HTTP request object.
 @pytest.fixture
-def mock_request(): 
+def mock_request():
     factory = RequestFactory()
-    request = factory.get('/')
-    
+    request = factory.get("/")
+
     ses_middleware = SessionMiddleware(lambda req: None)
     ses_middleware.process_request(request)
     request.session.save()
-    
+
     auth_middleware = AuthenticationMiddleware(lambda req: None)
     auth_middleware.process_request(request)
-    
-    return request 
+
+    return request

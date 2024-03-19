@@ -1,19 +1,17 @@
 import pytest
-
 from django.contrib.auth import get_user_model
 
-# from rest_framework.exceptions import ValidationError 
-
-# User appropriate validation error that has been used in the code. 
-# if Django validation error has been used, then used Django validation error, 
-# or user DRF validation error if DRF validation error has been used in actual code. 
+# User appropriate validation error that has been used in the code.
+# if Django validation error has been used, then used Django validation error,
+# or user DRF validation error if DRF validation error has been used in actual code.
 from django.core.exceptions import ValidationError
 
+# from rest_framework.exceptions import ValidationError
 
 
 User = get_user_model()
 
-'''
+"""
 Info On Running Test - Which Field Should Be Tested First 
 
 
@@ -21,10 +19,10 @@ Running test coverage would give hint which fields should we test / focus on tes
 So, before running rest, run a test coverage, check the vurnarable fields, then right test cases. 
 
 After that we can focus on other edge cases to test. 
-'''
+"""
 
 
-'''
+"""
 Run any of the below make command to test with test-coverage result: 
 
 
@@ -33,15 +31,15 @@ pytest-no-wrn-codecov:
 
 pytest-no-wrn-codecov-html:
 	docker compose -f dev.yml run --rm api pytest -p no:warnigns --cov=. --cov-report html
-'''
+"""
 
 
-'''
+"""
 Test Param: 
 Use: normal_user if general user instance is needed. 
 Use: super_user if super_user instance is needed. 
 User: user_factory is instance is to be created 
-'''
+"""
 
 
 @pytest.mark.django_db
@@ -140,7 +138,7 @@ def test_create_user_without_first_name(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(first_name=None)
 
-    assert "Please provide first name." in str(err.value) 
+    assert "Please provide first name." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -151,7 +149,7 @@ def test_create_user_without_last_name(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(last_name=None)
 
-    assert "Please provide last name."  in str(err.value)
+    assert "Please provide last name." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -175,20 +173,20 @@ def test_normal_user_email_normalized(normal_user):
 
 
 @pytest.mark.django_db
-def test_user_get_email(normal_user): 
+def test_user_get_email(normal_user):
     """
     Test Custom User get_email method is correct
     """
     email = normal_user.email
-    assert email == normal_user.get_email 
+    assert email == normal_user.get_email
 
 
 @pytest.mark.django_db
-def test_user_phone_number(normal_user): 
+def test_user_phone_number(normal_user):
     """
     Test Custom User get_phone_number method is correct
     """
-    phone_no = normal_user.phone_number 
+    phone_no = normal_user.phone_number
     assert phone_no == normal_user.get_phone_number
 
 
@@ -200,8 +198,8 @@ def test_user_email_incorrect(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(email="invalidemail.com")
 
-    #     assert str(err.value) == "Please provide a valid email address." this results the below error 
-    # assert "['Please pro...d password.']" == 'Please provi...lid password.' 
+    #     assert str(err.value) == "Please provide a valid email address." this results the below error
+    # assert "['Please pro...d password.']" == 'Please provi...lid password.'
     assert "Please provide a valid email address." in str(err.value)
 
 
@@ -213,7 +211,7 @@ def test_user_with_no_email(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(email=None)
 
-    assert "Please provide an email address." in str(err.value) 
+    assert "Please provide an email address." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -224,10 +222,11 @@ def test_user_with_no_password(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(password=None)
 
-    assert "Please provide a valid password." in str(err.value) 
+    assert "Please provide a valid password." in str(err.value)
 
 
 # #superuser tests
+
 
 @pytest.mark.django_db
 def test_super_user_email_normalized(super_user):
@@ -246,7 +245,7 @@ def test_super_user_with_no_email(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(email=None, is_superuser=True, is_staff=True)
 
-    assert "Please provide an email address." in str(err.value) 
+    assert "Please provide an email address." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -263,10 +262,10 @@ def test_super_user_with_no_password(user_factory):
     # n - continue next line
     # type any var to see its value
     # set breakpoint - import pdb; pdb.set_trace()
-    
+
     # #pytest.set_trace()
 
-    assert "Please provide a valid password." in str(err.value) 
+    assert "Please provide a valid password." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -277,7 +276,7 @@ def test_super_user_is_not_staff(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(is_superuser=True, is_staff=False)
 
-    assert "Superuser must have is_staff=Ture." in str(err.value) 
+    assert "Superuser must have is_staff=Ture." in str(err.value)
 
 
 @pytest.mark.django_db
@@ -287,5 +286,5 @@ def test_super_user_is_not_superuser(user_factory):
     """
     with pytest.raises(ValidationError) as err:
         user_factory.create(is_superuser=False, is_staff=True)
-    
-    assert "Superuser must have is_superuser=Ture." in  str(err.value)
+
+    assert "Superuser must have is_superuser=Ture." in str(err.value)

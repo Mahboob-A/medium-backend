@@ -110,7 +110,7 @@ pytest-no-wrn-codecov-html:
 
 
 
-# ### Other Tools used in api service 
+# ### Other Tools for Formatting 
 
 flake8: 
 	docker compose -f dev.yml exec api flake8 . 

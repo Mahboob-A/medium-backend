@@ -1,17 +1,15 @@
 import pytest
-
-
 from django.contrib.auth import get_user_model
 from rest_framework.exceptions import ValidationError
-from core_apps.users.serializers import UserSerializer, CustomRegisterSerializer
 
+from core_apps.users.serializers import CustomRegisterSerializer, UserSerializer
 
 User = get_user_model()
 
 
 # ## Test Serializer 01: UserSerializer
 # comment the mute_signals decorator in the factories.py as failed to do so would yield
-# RelatedObjectDoesNotExist (Profile as Profile is being created post_save of CustomUser)  
+# RelatedObjectDoesNotExist (Profile as Profile is being created post_save of CustomUser)
 # does not found error and test will fail.
 @pytest.mark.django_db
 def test_user_serializer(normal_user):

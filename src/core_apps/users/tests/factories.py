@@ -1,9 +1,7 @@
 import factory
-from faker import Factory as FakerFactory
-
 from django.contrib.auth import get_user_model
 from django.db.models.signals import post_save
-
+from faker import Factory as FakerFactory
 
 faker = FakerFactory().create()
 
@@ -11,9 +9,9 @@ User = get_user_model()
 
 
 # For testing models that needs to use signals, comment the decorator.
+# TODO comment the mute_signals decorator for testing test_serializer and some of test_models
 # @factory.django.mute_signals(post_save)
 class UserFactory(factory.django.DjangoModelFactory):
-
     class Meta:
         model = User
 
