@@ -50,7 +50,13 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def get_total_followers(self, obj):
-        return obj.profile.followers.all()
+        """
+        return obj.followers.count() vs return obj.followers.all().count()
+
+        The latter one loads all the followers in the memory then counts, while the former leverages
+        the COUNT of database without loading all the objects in memory - thus making it more efficient.
+        """
+        return obj.profile.followers.count()
 
     def to_representation(self, instance):
         representation = super(UserSerializer, self).to_representation(instance)

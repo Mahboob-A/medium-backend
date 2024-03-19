@@ -1,7 +1,14 @@
 import pytest
 
 from django.contrib.auth import get_user_model
+
+# from rest_framework.exceptions import ValidationError 
+
+# User appropriate validation error that has been used in the code. 
+# if Django validation error has been used, then used Django validation error, 
+# or user DRF validation error if DRF validation error has been used in actual code. 
 from django.core.exceptions import ValidationError
+
 
 
 User = get_user_model()
