@@ -20,7 +20,7 @@ class CustomUserManager(BaseUserManager):
             raise ValidationError(_("Please provide first name."))
 
         if not last_name:
-            raise ValidationError(_("Plese provide last name."))
+            raise ValidationError(_("Please provide last name."))
 
         if not password:
             raise ValidationError(_("Please provide a valid password."))

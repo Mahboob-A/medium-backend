@@ -29,6 +29,14 @@ pytest-no-wrn-codecov-html:
 '''
 
 
+'''
+Test Param: 
+Use: normal_user if general user instance is needed. 
+Use: super_user if super_user instance is needed. 
+User: user_factory is instance is to be created 
+'''
+
+
 @pytest.mark.django_db
 def test_create_normal_user(normal_user):
     """
@@ -122,10 +130,10 @@ def test_create_user_without_first_name(user_factory):
     """
     Test Custom User first_name is provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(first_name=None)
 
-    assert str(err.value) == "Please provide first name."
+    assert "Please provide first name." in str(err.value) 
 
 
 @pytest.mark.django_db
@@ -133,10 +141,10 @@ def test_create_user_without_last_name(user_factory):
     """
     Test Custom User last_name is provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(last_name=None)
 
-    assert str(err.value) == "Please provide last name."
+    assert "Please provide last name."  in str(err.value)
 
 
 @pytest.mark.django_db
@@ -160,6 +168,24 @@ def test_normal_user_email_normalized(normal_user):
 
 
 @pytest.mark.django_db
+def test_user_get_email(normal_user): 
+    """
+    Test Custom User get_email method is correct
+    """
+    email = normal_user.email
+    assert email == normal_user.get_email 
+
+
+@pytest.mark.django_db
+def test_user_phone_number(normal_user): 
+    """
+    Test Custom User get_phone_number method is correct
+    """
+    phone_no = normal_user.phone_number 
+    assert phone_no == normal_user.get_phone_number
+
+
+@pytest.mark.django_db
 def test_user_email_incorrect(user_factory):
     """
     Test Custom User email address is correct
@@ -167,7 +193,8 @@ def test_user_email_incorrect(user_factory):
     with pytest.raises(ValidationError) as err:
         user_factory.create(email="invalidemail.com")
 
-    #     assert str(err.value) == "Please provide a valid email address."
+    #     assert str(err.value) == "Please provide a valid email address." this results the below error 
+    # assert "['Please pro...d password.']" == 'Please provi...lid password.' 
     assert "Please provide a valid email address." in str(err.value)
 
 
@@ -176,10 +203,10 @@ def test_user_with_no_email(user_factory):
     """
     Test Custom User email has not provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(email=None)
 
-    assert str(err.value) == "Please provide an email address."
+    assert "Please provide an email address." in str(err.value) 
 
 
 @pytest.mark.django_db
@@ -187,10 +214,10 @@ def test_user_with_no_password(user_factory):
     """
     Test Custom User password has not provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(password=None)
 
-    assert str(err.value) == "Please provide a valid password."
+    assert "Please provide a valid password." in str(err.value) 
 
 
 # #superuser tests
@@ -209,10 +236,10 @@ def test_super_user_with_no_email(user_factory):
     """
     Test Custom Super User email has not provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(email=None, is_superuser=True, is_staff=True)
 
-    assert str(err.value) == "Please provide an email address."
+    assert "Please provide an email address." in str(err.value) 
 
 
 @pytest.mark.django_db
@@ -220,10 +247,19 @@ def test_super_user_with_no_password(user_factory):
     """
     Test Custom Super User password has not provided
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(password=None, is_superuser=True, is_staff=True)
 
-    assert str(err.value) == "Please provide a valid password."
+    # to debug set the breakpoint whereever needed.
+    # c - until next breakpont
+    # q quit
+    # n - continue next line
+    # type any var to see its value
+    # set breakpoint - import pdb; pdb.set_trace()
+    
+    # #pytest.set_trace()
+
+    assert "Please provide a valid password." in str(err.value) 
 
 
 @pytest.mark.django_db
@@ -231,10 +267,10 @@ def test_super_user_is_not_staff(user_factory):
     """
     Test Custom Super User is not staff
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(is_superuser=True, is_staff=False)
 
-    assert str(err.value) == "Superuser must have is_staff=Ture."
+    assert "Superuser must have is_staff=Ture." in str(err.value) 
 
 
 @pytest.mark.django_db
@@ -242,7 +278,7 @@ def test_super_user_is_not_superuser(user_factory):
     """
     Test Custom Super User is not superuser
     """
-    with pytest.raises(ValueError) as err:
+    with pytest.raises(ValidationError) as err:
         user_factory.create(is_superuser=False, is_staff=True)
-
-    assert str(err.value) == "Superuser must have is_superuser=Ture."
+    
+    assert "Superuser must have is_superuser=Ture." in  str(err.value)
